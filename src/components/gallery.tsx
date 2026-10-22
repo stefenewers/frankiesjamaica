@@ -9,13 +9,24 @@ import { useState } from "react";
  */
 export function Gallery({ images, name }: { images: string[]; name: string }) {
   const [active, setActive] = useState(0);
+  const [slide, setSlide] = useState(0);
   const alt = (i: number) => (i === 0 ? name : `${name}, photo ${i + 1}`);
 
   return (
     <>
       {/* Mobile */}
       <div className="md:hidden">
-        <div className="-mx-[var(--gutter)] flex snap-x snap-mandatory gap-2 overflow-x-auto px-[var(--gutter)] [scrollbar-width:none]">
+        <div
+          className="-mx-[var(--gutter)] flex snap-x snap-mandatory gap-2 overflow-x-auto px-[var(--gutter)] [scrollbar-width:none]"
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const step = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? el.clientWidth;
+            setSlide(Math.min(images.length - 1, Math.round(el.scrollLeft / (step + 8))));
+          }}
+          aria-label={`${name} photos`}
+          role="region"
+          tabIndex={images.length > 1 ? 0 : undefined}
+        >
           {images.map((src, i) => (
             <div
               key={src}
@@ -25,7 +36,19 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
             </div>
           ))}
         </div>
-        {images.length > 1 && <p className="meta mt-3">{images.length} photos — swipe to see more</p>}
+        {images.length > 1 && (
+          <div className="mt-4 flex items-center gap-4" aria-hidden="true">
+            <span className="meta tabular-nums">
+              {slide + 1} / {images.length}
+            </span>
+            <span className="relative h-px flex-1 bg-rule">
+              <span
+                className="absolute inset-y-0 left-0 bg-ink transition-[width] duration-300"
+                style={{ width: `${((slide + 1) / images.length) * 100}%` }}
+              />
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Desktop */}
@@ -56,8 +79,9 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
               src={src}
               alt={alt(i)}
               fill
-              preload={i === 0}
-              sizes="(min-width: 1440px) 760px, 52vw"
+              // Only the mobile gallery preloads; preloading both would double the download on phones.
+              loading={i === 0 ? "eager" : "lazy"}
+              sizes="(min-width: 1440px) 760px, (min-width: 1024px) 52vw, 90vw"
               aria-hidden={i !== active}
               className={`object-cover transition-opacity duration-500 ${i === active ? "opacity-100" : "opacity-0"}`}
             />

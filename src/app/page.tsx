@@ -1,35 +1,35 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
+import { StudioSteps } from "@/components/studio-steps";
 import { business, products } from "@/lib/catalog";
 
 const cards = products.filter((p) => p.category === "cards" && p.featured && p.available).slice(0, 4);
+const occasions = products.filter((p) => p.category === "cards" && p.available && p.occasion);
 const granola = products.filter((p) => p.category === "granola" && p.available).slice(0, 2);
-
-const services = ["Personal celebrations", "Events", "Businesses", "Gifting", "Bespoke occasions"];
 
 export default function Home() {
   return (
     <>
       {/* 1 — Hero: type-led, asymmetric. */}
-      <section aria-labelledby="hero" className="page pb-[var(--section-y)] pt-8 md:pt-12">
+      <section aria-labelledby="hero" className="page pb-[var(--section-y)] pt-5 md:pt-12">
         <div className="meta flex justify-between pb-4 rule-b">
           <span>{business.city}</span>
           <span>Est. {business.founded}</span>
         </div>
 
-        <div className="mt-10 grid gap-y-12 md:mt-12 md:grid-cols-12 md:gap-x-8">
+        <div className="mt-7 grid gap-y-10 md:mt-12 md:grid-cols-12 md:gap-x-8">
           <div className="flex flex-col md:col-span-7 md:pr-4">
             <h1 id="hero" className="display-xl rise">
               Some things deserve more than a&nbsp;text.
             </h1>
 
-            <div className="rise rise-delay mt-10 grid gap-10 md:mt-12 md:flex-1 md:grid-cols-7 md:gap-8">
+            <div className="rise rise-delay mt-6 grid gap-10 md:mt-12 md:flex-1 md:grid-cols-7 md:gap-8">
               <div className="md:col-span-4 md:self-start">
                 <p className="lede max-w-sm">
                   Cards and small gifts from Kingston — made to be given, opened and kept.
                 </p>
-                <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
+                <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-5 md:mt-8">
                   <Link href="/shop?category=cards" className="btn btn-primary">
                     Shop cards
                   </Link>
@@ -41,10 +41,10 @@ export default function Home() {
               <div className="frame hidden aspect-square md:col-span-3 md:block md:self-end">
                 <Image
                   src="/images/envelope-open-this.jpg"
-                  alt="Kraft envelope closed with a FRANKIES seal reading Open This"
+                  alt="Kraft envelope closed with the FRANKIES seal, reading Open This"
                   fill
                   sizes="15vw"
-                  className="object-cover"
+                  className="object-cover object-[50%_70%]"
                 />
               </div>
             </div>
@@ -53,13 +53,13 @@ export default function Home() {
           <div className="md:col-span-5">
             <div className="frame aspect-[4/5]">
               <Image
-                src="/images/brand-stone-sign.jpg"
-                alt="Stone sign engraved with FRANKIES, beside a vase of trailing greenery"
+                src="/images/brand-gift-box.jpg"
+                alt="FRANKIES cards with line illustrations, laid out beside a white gift box closed with the FRANKIES seal"
                 fill
                 preload
                 fetchPriority="high"
                 sizes="(min-width: 1440px) 540px, (min-width: 768px) 40vw, 100vw"
-                className="object-cover object-[50%_60%]"
+                className="object-cover"
               />
             </div>
           </div>
@@ -87,6 +87,21 @@ export default function Home() {
               <ProductCard key={p.slug} product={p} sizes="(min-width: 1024px) 22vw, 50vw" />
             ))}
           </div>
+
+          <nav aria-labelledby="occasions" className="mt-16 grid gap-6 pt-6 rule-t md:mt-24 md:grid-cols-12 md:gap-8">
+            <h3 id="occasions" className="kicker md:col-span-3">
+              Shop by occasion
+            </h3>
+            <ul className="flex flex-wrap gap-x-6 gap-y-3 md:col-span-9">
+              {occasions.map((p) => (
+                <li key={p.slug}>
+                  <Link href={`/shop/${p.slug}`} className="font-display text-xl transition-colors hover:text-brown md:text-2xl">
+                    {p.slug === "custom-cards" ? "Something custom" : p.occasion}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </section>
 
@@ -96,7 +111,7 @@ export default function Home() {
           <div className="frame aspect-[3/4] md:col-span-5">
             <Image
               src="/images/lifestyle-gifting.jpg"
-              alt="Two friends embracing, one holding an illustrated card"
+              alt="Two friends embracing, one holding up an illustrated card"
               fill
               sizes="(min-width: 768px) 38vw, 100vw"
               className="object-cover"
@@ -104,14 +119,14 @@ export default function Home() {
           </div>
           <div className="md:col-span-6 md:col-start-7">
             <h2 id="statement" className="display-l">
-              Not everything should disappear in a&nbsp;text.
+              Choose it. Write in it. Seal it. Hand it over.
             </h2>
             <div className="lede mt-10 max-w-md space-y-5">
               <p>
-                A message gets read once. A card gets opened, propped on a shelf, tucked into a drawer and found
-                again years later.
+                The best part of a card happens after it leaves us — the minute you take to write something true,
+                and the moment someone opens it in front of you.
               </p>
-              <p>FRANKIES makes the things worth giving — and worth keeping.</p>
+              <p>We make the card. The rest is yours.</p>
             </div>
           </div>
         </div>
@@ -126,33 +141,28 @@ export default function Home() {
               Made to order, down to the last word.
             </h2>
             <p className="lede mt-10 max-w-md text-bone/90">
-              Tell us the occasion, how many you need and when. We&apos;ll design around it and confirm every detail
-              with you directly.
+              Cards for personal celebrations, events, businesses and gifts — worked out with you, one
+              conversation at a time.
             </p>
-            <ul className="mt-12 max-w-md border-t border-bone/25">
-              {services.map((s, i) => (
-                <li key={s} className="flex items-baseline gap-6 border-b border-bone/25 py-4">
-                  <span className="meta w-6 text-bone/80 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-xl">{s}</span>
-                </li>
-              ))}
-            </ul>
             <div className="mt-12">
               <Link href="/custom" className="btn btn-inverse">
                 Start a custom card
               </Link>
             </div>
           </div>
-          <div className="md:col-span-5 md:col-start-8">
-            <div className="frame aspect-[4/5] bg-brown-deep md:sticky md:top-[calc(var(--header-h)+2rem)]">
+          <div className="md:col-span-4 md:col-start-9">
+            <div className="frame aspect-[4/5] bg-brown-deep">
               <Image
-                src="/images/brand-gift-box.jpg"
-                alt="FRANKIES gift box with illustrated cards laid out on a wooden table"
+                src="/images/cards-custom.jpg"
+                alt="A FRANKIES card in the sand: custom cards for every occasion"
                 fill
-                sizes="(min-width: 768px) 38vw, 100vw"
+                sizes="(min-width: 768px) 30vw, 100vw"
                 className="object-cover"
               />
             </div>
+          </div>
+          <div className="md:col-span-12 md:mt-8">
+            <StudioSteps tone="bone" />
           </div>
         </div>
       </section>
@@ -188,10 +198,24 @@ export default function Home() {
 
       {/* 6 — Story */}
       <section aria-labelledby="story" className="rule-t">
-        <div className="page section grid gap-12 md:grid-cols-12 md:gap-8">
-          <div className="md:col-span-4">
+        <div className="page section grid gap-12 md:grid-cols-12 md:items-center md:gap-8">
+          <div className="frame aspect-square md:col-span-5">
+            <Image
+              src="/images/brand-stone-sign.jpg"
+              alt="Stone sign engraved with FRANKIES, beside a vase of trailing greenery"
+              fill
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="md:col-span-6 md:col-start-7">
             <p className="kicker text-brown">Kingston, {business.founded}</p>
-            <p className="mt-6 max-w-xs">
+            <blockquote className="mt-6">
+              <p id="story" className="display-l">
+                “Long after the flowers fade and the celebrations end, the card remains.”
+              </p>
+            </blockquote>
+            <p className="mt-8 max-w-sm">
               FRANKIES was founded by {business.founder} in Kingston, Jamaica, to make the kind of things people
               hold on to.
             </p>
@@ -199,12 +223,6 @@ export default function Home() {
               About FRANKIES
             </Link>
           </div>
-          <blockquote className="md:col-span-7 md:col-start-6">
-            <p id="story" className="display-l">
-              “Long after the flowers fade and the celebrations end, the card remains.”
-            </p>
-            <footer className="meta mt-8">— FRANKIES</footer>
-          </blockquote>
         </div>
       </section>
 

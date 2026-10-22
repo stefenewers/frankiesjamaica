@@ -34,7 +34,7 @@ export function Header() {
       </a>
       <div className="page grid h-[var(--header-h)] grid-cols-[1fr_auto_1fr] items-center">
         {/* Left: desktop nav / mobile menu toggle */}
-        <nav aria-label="Main" className="hidden md:block">
+        <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-10">
             {navLinks.map((l) => (
               <li key={l.href}>
@@ -51,7 +51,7 @@ export function Header() {
         </nav>
         <button
           type="button"
-          className="icon-btn -ml-2.5 md:hidden"
+          className="icon-btn -ml-2.5 lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -61,7 +61,7 @@ export function Header() {
         </button>
 
         <Link href="/" aria-label="FRANKIES — home" className="justify-self-center">
-          <Wordmark priority className="h-[17px] w-auto md:h-[21px]" />
+          <Wordmark priority className="h-[17px] w-auto md:h-[19px] lg:h-[21px]" />
         </Link>
 
         {/* Right: bag */}
@@ -73,7 +73,7 @@ export function Header() {
             data-testid="open-cart"
             className="group -mr-2.5 flex items-center gap-2.5 p-2.5 transition-colors hover:text-brown"
           >
-            <span className="kicker hidden md:inline" aria-hidden="true">
+            <span className="kicker hidden lg:inline" aria-hidden="true">
               Bag
             </span>
             <span className="relative" aria-hidden="true">
@@ -89,7 +89,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <div id="mobile-nav" className="rule-t md:hidden">
+        <div id="mobile-nav" className="rule-t lg:hidden">
           <nav aria-label="Main" className="page pb-10 pt-6">
             <ul>
               {navLinks.map((l) => (

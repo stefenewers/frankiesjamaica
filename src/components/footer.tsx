@@ -14,8 +14,8 @@ export function Footer() {
   return (
     <footer className="bg-ink text-bone">
       <div className="page pb-28 pt-20 md:pb-12 md:pt-28">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-14 md:grid-cols-12 md:gap-8">
-          <div className="col-span-2 md:col-span-5">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-14 md:grid-cols-3 md:gap-8 lg:grid-cols-12">
+          <div className="col-span-2 md:col-span-3 lg:col-span-4">
             <Link href="/" aria-label="FRANKIES — home" className="inline-block">
               <Wordmark tone="bone" className="h-7 w-auto md:h-9" />
             </Link>
@@ -24,7 +24,7 @@ export function Footer() {
             </p>
           </div>
 
-          <nav aria-label="Footer" className="md:col-span-2 md:col-start-7">
+          <nav aria-label="Footer" className="lg:col-span-2 lg:col-start-6">
             <p className="kicker mb-5 text-bone/60">Explore</p>
             <ul className="space-y-3 text-[0.9375rem]">
               {footerLinks.map((l) => (
@@ -37,7 +37,7 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div className="md:col-span-2">
+          <div className="lg:col-span-2">
             <p className="kicker mb-5 text-bone/60">Elsewhere</p>
             <ul className="space-y-3 text-[0.9375rem]">
               {elsewhere.map((l) => (
@@ -51,7 +51,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="col-span-2 md:col-span-2">
+          <div className="col-span-2 md:col-span-1 lg:col-span-3">
             <p className="kicker mb-5 text-bone/60">Contact</p>
             <ul className="space-y-3 text-[0.9375rem]">
               <li>
@@ -62,7 +62,7 @@ export function Footer() {
               </li>
               {business.email && (
                 <li>
-                  <a href={`mailto:${business.email}`} className="break-all transition-colors hover:text-stone">
+                  <a href={`mailto:${business.email}`} className="transition-colors hover:text-stone">
                     {business.email}
                   </a>
                 </li>

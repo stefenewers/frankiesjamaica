@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { AddToCart } from "@/components/add-to-cart";
 import { Gallery } from "@/components/gallery";
+import { HowToOrder } from "@/components/how-to-order";
+import { ProductDetails } from "@/components/product-details";
 import { ProductCard } from "@/components/product-card";
 import { business, getCategory, getProduct, products, startingPrice } from "@/lib/catalog";
 import { jsonLd, siteUrl } from "@/lib/site";
@@ -36,8 +38,8 @@ function ProductSkeleton() {
   return (
     <div className="page pb-[var(--section-y)] pt-6 md:pt-10" aria-busy="true">
       <div className="mb-6 h-4 w-48 bg-stone md:mb-10" />
-      <div className="grid gap-10 md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] md:gap-12 lg:gap-24">
-        <div className="frame aspect-[4/5] md:ml-[calc(4.5rem+1.5rem)]" />
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-16 xl:gap-24">
+        <div className="frame aspect-[4/5] lg:ml-[calc(4.5rem+1.5rem)]" />
         <div className="space-y-6 md:pt-2">
           <div className="h-3 w-16 bg-stone" />
           <div className="h-10 w-3/4 bg-stone" />
@@ -100,30 +102,37 @@ async function Product({ params }: { params: PageProps<"/shop/[slug]">["params"]
           </ol>
         </nav>
 
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] md:gap-12 lg:gap-24">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-16 xl:gap-24">
           <Gallery images={product.images} name={product.name} />
 
-          <div className="md:sticky md:top-[calc(var(--header-h)+2.5rem)] md:self-start md:pt-2">
+          <div className="md:max-w-xl lg:sticky lg:top-[calc(var(--header-h)+2.5rem)] lg:max-w-none lg:self-start lg:pt-2">
             {category && <p className="kicker text-ink-muted">{category.name}</p>}
             <h1 className="display-m mt-4">{product.name}</h1>
             <p className="lede mt-6 max-w-md">{product.description}</p>
             <div className="mt-8">
-              <AddToCart product={product} />
+              {product.slug === "custom-cards" ? (
+                // Custom work starts with a brief, not a bag.
+                <div className="space-y-5 pt-8 rule-t">
+                  <Link href="/custom#brief" className="btn btn-primary w-full">
+                    Start a custom card
+                  </Link>
+                  <p className="meta">Priced once the details are agreed with you.</p>
+                </div>
+              ) : (
+                <AddToCart product={product} />
+              )}
             </div>
-            {product.slug === "custom-cards" && (
-              <Link href="/custom" className="link-arrow mt-8">
-                Open the Custom Studio
-              </Link>
-            )}
-            <p className="meta mt-10 max-w-sm pt-6 rule-t">
-              Every order is confirmed personally on WhatsApp, where we arrange delivery or pickup and payment.
-            </p>
+            <div className="mt-10">
+              <ProductDetails product={product} />
+            </div>
           </div>
         </div>
       </div>
 
+      <HowToOrder />
+
       {related.length > 0 && (
-        <section aria-labelledby="related" className="rule-t">
+        <section aria-labelledby="related">
           <div className="page section">
             <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
               <h2 id="related" className="display-m">

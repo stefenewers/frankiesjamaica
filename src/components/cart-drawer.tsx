@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useCart } from "./cart-provider";
 import { CloseIcon } from "./icons";
+import { PendingNotice } from "./pending-notice";
 import { PRICE_PENDING, formatPrice } from "@/lib/catalog";
 import { setQty } from "@/lib/cart-store";
 import { formatSubtotal, subtotal, type ResolvedLine } from "@/lib/order";
@@ -56,6 +57,7 @@ export function CartDrawer() {
               ))}
             </ul>
             <div className="space-y-5 px-6 pb-6 pt-5 rule-t">
+              <PendingNotice onNavigate={close} />
               <div className="flex items-baseline justify-between gap-4">
                 <span className="kicker">Subtotal</span>
                 <span className="text-right" data-testid="cart-subtotal">
@@ -65,7 +67,7 @@ export function CartDrawer() {
               <Link href="/checkout" className="btn btn-primary w-full" onClick={close}>
                 Checkout
               </Link>
-              <p className="meta text-center">Your order is confirmed with us on WhatsApp.</p>
+              <p className="meta text-center">You&apos;ll send your order to us on WhatsApp to confirm it.</p>
             </div>
           </>
         )}

@@ -6,10 +6,24 @@ export type Variant = {
   price: number | null;
 };
 
+/** Facts shown on the product page. `null` = not confirmed yet (see MERCHANT_HANDOFF.md). */
+export type ProductDetails = {
+  /** e.g. "Six designs, shown above" */
+  designs: string | null;
+  /** What the customer receives, e.g. "One card with a kraft envelope" */
+  includes: string | null;
+  size: string | null;
+  material: string | null;
+  personalisation: string | null;
+};
+
 export type Product = {
   slug: string;
   name: string;
   category: string;
+  /** Who/what it's for, e.g. "Birthdays". `null` for non-card products. */
+  occasion: string | null;
+  details: ProductDetails;
   /** Price in whole JMD. `null` shows "Enquire" / "Price confirmed on WhatsApp". Ignored when variants have their own price. */
   price: number | null;
   variants: Variant[];

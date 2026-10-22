@@ -5,15 +5,12 @@ import { getCategory, priceLabel, type Product } from "@/lib/catalog";
 type Props = {
   product: Product;
   priority?: boolean;
-  /** Show the category above the name (useful in mixed grids). */
-  showCategory?: boolean;
   sizes?: string;
 };
 
 export function ProductCard({
   product,
   priority = false,
-  showCategory = false,
   sizes = "(min-width: 1024px) 30vw, 50vw",
 }: Props) {
   const [primary, secondary] = product.images;
@@ -36,19 +33,19 @@ export function ProductCard({
           <span className="kicker absolute left-3 top-3 bg-bone px-2.5 py-1.5">Sold out</span>
         )}
       </div>
-      <div className="mt-4 flex flex-col gap-1 md:mt-5 lg:flex-row lg:items-baseline lg:justify-between lg:gap-4">
-        <div>
-          {showCategory && <p className="kicker mb-1.5 text-ink-muted">{getCategory(product.category)?.name}</p>}
-          <h3 className="title">
-            <Link
-              href={`/shop/${product.slug}`}
-              className="transition-colors after:absolute after:inset-0 group-hover:text-brown"
-            >
-              {product.name}
-            </Link>
-          </h3>
-        </div>
-        <p className="meta shrink-0 whitespace-nowrap">{priceLabel(product)}</p>
+      <div className="mt-4 md:mt-5">
+        <h3 className="title">
+          <Link
+            href={`/shop/${product.slug}`}
+            className="transition-colors after:absolute after:inset-0 group-hover:text-brown"
+          >
+            {product.name}
+          </Link>
+        </h3>
+        <p className="meta mt-1.5 flex flex-wrap justify-between gap-x-4 gap-y-0.5">
+          <span>{product.occasion ?? getCategory(product.category)?.name}</span>
+          <span className="whitespace-nowrap">{priceLabel(product)}</span>
+        </p>
       </div>
     </article>
   );

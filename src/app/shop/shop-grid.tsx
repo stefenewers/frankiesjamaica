@@ -36,7 +36,7 @@ function Grid({ category }: { category: string | null }) {
       <h2 className="sr-only">{active ? categories.find((c) => c.id === active)?.name : "All products"}</h2>
       <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20 lg:grid-cols-3">
         {shown.map((p, i) => (
-          <ProductCard key={p.slug} product={p} priority={i < 2} showCategory={!active} />
+          <ProductCard key={p.slug} product={p} priority={i < 2} />
         ))}
       </div>
     </>

@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/components/cart-provider";
 import { WhatsAppIcon } from "@/components/icons";
+import { PendingNotice } from "@/components/pending-notice";
 import { PRICE_PENDING, business, formatPrice } from "@/lib/catalog";
-import { clearCart, rememberOrderUrl } from "@/lib/cart-store";
+import { startHandoff } from "@/lib/cart-store";
 import { buildOrderUrl, formatSubtotal, subtotal, type Customer, type DeliveryMethod } from "@/lib/order";
 
 export function CheckoutForm() {
@@ -37,7 +38,6 @@ export function CheckoutForm() {
       notes: String(form.get("notes") ?? ""),
     };
     const url = buildOrderUrl(business.whatsapp, resolved, customer);
-    rememberOrderUrl(url);
 
     // Optional backup copy of the order (disabled unless ORDER_EMAIL_ENABLED=true).
     fetch("/api/order", {
@@ -47,15 +47,16 @@ export function CheckoutForm() {
       keepalive: true,
     }).catch(() => {});
 
-    // Open WhatsApp synchronously inside the submit handler so pop-up blockers allow it.
-    window.open(url, "_blank", "noopener,noreferrer");
-    clearCart();
+    // Opens WhatsApp (synchronously, so pop-up blockers allow it) and keeps the bag
+    // until the customer confirms they've sent the message on /thanks.
+    startHandoff("order", url, lines);
     router.push("/thanks");
   }
 
   return (
     <div className="grid gap-16 md:grid-cols-12 md:gap-8">
       <form onSubmit={handleSubmit} className="space-y-10 md:col-span-6" aria-label="Your details">
+        <PendingNotice />
         <p className="kicker">Your details</p>
         <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
           <div>

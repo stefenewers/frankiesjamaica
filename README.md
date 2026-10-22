@@ -95,7 +95,10 @@ npm test               # Playwright: cart → checkout → WhatsApp link (first 
   ```
 
 - Very long orders are shortened so the link stays under ~1,900 characters, the limit that opens reliably on iOS, Android and desktop.
-- `/thanks` offers an "Open WhatsApp again" button in case a pop-up blocker stopped it.
+- Opening WhatsApp doesn't mean an order was sent, so the site treats it as a **pending handoff** (`src/lib/cart-store.ts`):
+  - the bag is kept, and the handoff is saved in `localStorage` so it survives reloads;
+  - `/thanks` says "Your order is ready to send", offers **Open WhatsApp (again)** — prominently if a pop-up blocker stopped it — and only clears the sent items when the customer taps **I've sent it**;
+  - the bag drawer, checkout and the mobile bottom bar remind the customer while an order is waiting.
 - `/custom` (the Custom Studio) sends a custom card request (occasion, quantity, date needed, message) the same way.
 
 The message builder lives in [`src/lib/order.ts`](src/lib/order.ts).
@@ -125,6 +128,9 @@ Prices in the email are recomputed on the server from `products.json`.
 6. **Analytics:** enable Web Analytics in the Vercel project. The `<Analytics />` component is already installed.
 
 ## Before launch
+
+See [`MERCHANT_HANDOFF.md`](MERCHANT_HANDOFF.md) for everything Kendall needs to confirm (prices, what's included, sizes, delivery, payment, custom process).
+
 
 - [ ] Kendall confirms the product list, prices, photos and the WhatsApp number (+1 876-886-8573)
 - [ ] Confirm the email address (info@frankiesjamaica.com, seen on the business card)

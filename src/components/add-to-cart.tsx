@@ -54,7 +54,7 @@ export function AddToCart({ product }: { product: Product }) {
           </div>
         )}
 
-        <div className="flex items-stretch gap-3">
+        <div className="flex flex-wrap items-stretch gap-3">
           <div className="flex shrink-0 items-center rounded-full border border-rule-strong px-1">
             <button
               type="button"
@@ -86,7 +86,7 @@ export function AddToCart({ product }: { product: Product }) {
               +
             </button>
           </div>
-          <button type="submit" className="btn btn-primary flex-1" disabled={!product.available}>
+          <button type="submit" className="btn btn-primary min-w-40 flex-1" disabled={!product.available}>
             {product.available ? "Add to bag" : "Sold out"}
           </button>
         </div>

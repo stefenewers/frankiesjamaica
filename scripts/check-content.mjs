@@ -18,6 +18,8 @@ for (const p of data.products) {
     if (!existsSync(new URL(`../public${img}`, import.meta.url))) problems.push(`"${p.slug}": missing image ${img}`);
   }
   if (p.price === null && !p.variants.some((v) => v.price !== null)) todos.push(`"${p.name}": no price yet (shows "Enquire")`);
+  const missing = Object.entries(p.details ?? {}).filter(([, v]) => v === null).map(([k]) => k);
+  if (missing.length) todos.push(`"${p.name}": details not confirmed yet (${missing.join(", ")})`);
   if (!p.reviewed) todos.push(`"${p.name}": not reviewed by Kendall yet (set "reviewed": true)`);
 }
 for (const f of data.faq) if (!f.a) todos.push(`FAQ "${f.q}": no answer yet (hidden on the site)`);

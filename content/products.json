@@ -32,12 +32,23 @@
       "slug": "birthday-cards",
       "name": "Birthday Cards",
       "category": "cards",
+      "occasion": "Birthdays",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-birthday.jpg", "/images/cards-birthday-girl.jpg"],
+      "images": [
+        "/images/cards-birthday.jpg",
+        "/images/cards-birthday-girl.jpg"
+      ],
       "description": "Bright, generous birthday cards for the people you'd celebrate any day of the year.",
       "available": true,
       "featured": true,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -45,12 +56,23 @@
       "slug": "everyday-cards",
       "name": "Everyday Cards",
       "category": "cards",
+      "occasion": "Just because",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-floral.jpg", "/images/cards-assorted.jpg"],
+      "images": [
+        "/images/cards-floral.jpg",
+        "/images/cards-assorted.jpg"
+      ],
       "description": "Cards for no particular reason — usually the best reason to send one.",
       "available": true,
       "featured": true,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -58,12 +80,23 @@
       "slug": "faith-cards",
       "name": "Faith Cards",
       "category": "cards",
+      "occasion": "Faith",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-faith.jpg", "/images/cards-faith-seasons.jpg"],
+      "images": [
+        "/images/cards-faith.jpg",
+        "/images/cards-faith-seasons.jpg"
+      ],
       "description": "Words of faith and encouragement, for every season.",
       "available": true,
       "featured": true,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -71,12 +104,22 @@
       "slug": "graduation-cards",
       "name": "Graduation Cards",
       "category": "cards",
+      "occasion": "Graduation",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-graduation.jpg"],
+      "images": [
+        "/images/cards-graduation.jpg"
+      ],
       "description": "For the graduate — a card to mark a day they'll remember.",
       "available": true,
       "featured": true,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -84,12 +127,22 @@
       "slug": "fathers-day-cards",
       "name": "Father's Day Cards",
       "category": "cards",
+      "occasion": "Father's Day",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-fathers-day.jpg"],
+      "images": [
+        "/images/cards-fathers-day.jpg"
+      ],
       "description": "For dads, granddads and the father figures who always show up.",
       "available": true,
       "featured": false,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -97,12 +150,22 @@
       "slug": "teacher-cards",
       "name": "Teacher Appreciation Cards",
       "category": "cards",
+      "occasion": "Teachers",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-teachers.jpg"],
+      "images": [
+        "/images/cards-teachers.jpg"
+      ],
       "description": "A proper thank-you for the teachers who made the difference.",
       "available": true,
       "featured": false,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -110,12 +173,23 @@
       "slug": "valentines-cards",
       "name": "Valentine's Cards",
       "category": "cards",
+      "occasion": "Valentine's Day",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-valentines.jpg", "/images/envelope-open-this.jpg"],
+      "images": [
+        "/images/cards-valentines.jpg",
+        "/images/envelope-open-this.jpg"
+      ],
       "description": "For your favourite person. Sealed, sent and kept.",
       "available": true,
       "featured": false,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -123,12 +197,23 @@
       "slug": "custom-cards",
       "name": "Custom Cards",
       "category": "cards",
+      "occasion": "Any occasion",
       "price": null,
       "variants": [],
-      "images": ["/images/brand-gift-box.jpg", "/images/cards-custom.jpg"],
+      "images": [
+        "/images/brand-gift-box.jpg",
+        "/images/cards-custom.jpg"
+      ],
       "description": "Cards made around your occasion — personal celebrations, events, businesses and gifts. Tell us what you need in the Custom Studio.",
       "available": true,
       "featured": false,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": "Made to your brief. The details are agreed with you on WhatsApp before you confirm."
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -136,12 +221,24 @@
       "slug": "coconut-granola",
       "name": "Coconut Granola",
       "category": "granola",
+      "occasion": null,
       "price": null,
       "variants": [],
-      "images": ["/images/granola-coconut.jpg", "/images/granola-coconut-bowl.jpg", "/images/granola-cup.jpg"],
+      "images": [
+        "/images/granola-coconut.jpg",
+        "/images/granola-coconut-bowl.jpg",
+        "/images/granola-cup.jpg"
+      ],
       "description": "Golden, crunchy granola with toasted coconut.",
       "available": true,
       "featured": false,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     },
@@ -149,12 +246,22 @@
       "slug": "chocolate-granola",
       "name": "Chocolate Granola",
       "category": "granola",
+      "occasion": null,
       "price": null,
       "variants": [],
-      "images": ["/images/granola-chocolate.jpg"],
+      "images": [
+        "/images/granola-chocolate.jpg"
+      ],
       "description": "Dark, rich chocolate granola for a slower start.",
       "available": true,
       "featured": false,
+      "details": {
+        "designs": null,
+        "includes": null,
+        "size": null,
+        "material": null,
+        "personalisation": null
+      },
       "etsyUrl": null,
       "reviewed": false
     }
