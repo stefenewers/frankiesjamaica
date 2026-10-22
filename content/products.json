@@ -1,0 +1,202 @@
+{
+  "business": {
+    "name": "FRANKIES",
+    "tagline": "made for every moment",
+    "statement": "Frankies is a lifestyle brand rooted in the beauty of everyday moments. Thoughtfully designed and effortlessly timeless, with a playful spirit and a minimalist approach — the little things that make life feel a bit more considered, and a lot more personal.",
+    "whatsapp": "18768868573",
+    "email": "info@frankiesjamaica.com",
+    "etsy": "https://frankiesja.etsy.com",
+    "instagram": "https://www.instagram.com/frankiesjamaica",
+    "pinterest": "https://www.pinterest.com/frankiesjamaica",
+    "currency": "JMD",
+    "city": "Kingston, Jamaica",
+    "founder": "Kendall Todd",
+    "founded": "2026"
+  },
+  "categories": [
+    {
+      "id": "cards",
+      "name": "Cards",
+      "blurb": "Cards for birthdays, milestones and the quiet in-betweens — plus custom cards for every occasion.",
+      "image": "/images/cards-assorted.jpg"
+    },
+    {
+      "id": "granola",
+      "name": "Granola",
+      "blurb": "Small-batch granola to fill your cup.",
+      "image": "/images/granola-jar.jpg"
+    }
+  ],
+  "products": [
+    {
+      "slug": "birthday-cards",
+      "name": "Birthday Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-birthday.jpg", "/images/cards-birthday-girl.jpg"],
+      "description": "Bright, joyful cards for the people worth celebrating.",
+      "available": true,
+      "featured": true,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "graduation-cards",
+      "name": "Graduation Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-graduation.jpg"],
+      "description": "Hats off to the grad — cards for a milestone worth marking.",
+      "available": true,
+      "featured": false,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "fathers-day-cards",
+      "name": "Father's Day Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-fathers-day.jpg"],
+      "description": "For the dads, granddads and father figures who show up.",
+      "available": true,
+      "featured": false,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "teacher-cards",
+      "name": "Teacher Appreciation Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-teachers.jpg"],
+      "description": "A thank-you for the teachers who make the magic happen.",
+      "available": true,
+      "featured": false,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "faith-cards",
+      "name": "Faith Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-faith.jpg", "/images/cards-faith-seasons.jpg"],
+      "description": "Words of encouragement for every season.",
+      "available": true,
+      "featured": true,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "valentines-cards",
+      "name": "Valentine's Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-valentines.jpg", "/images/envelope-open-this.jpg"],
+      "description": "Celebrate your favourite person with a FRANKIES card.",
+      "available": true,
+      "featured": false,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "everyday-cards",
+      "name": "Everyday Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-floral.jpg", "/images/cards-assorted.jpg"],
+      "description": "Simple, considered cards for no reason at all.",
+      "available": true,
+      "featured": false,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "custom-cards",
+      "name": "Custom Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-custom.jpg", "/images/brand-gift-box.jpg"],
+      "description": "Custom cards for every occasion — for personal moments, professional events, and everything in between.",
+      "available": true,
+      "featured": true,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "coconut-granola",
+      "name": "Coconut Granola",
+      "category": "granola",
+      "price": null,
+      "variants": [],
+      "images": ["/images/granola-jar.jpg", "/images/granola-coconut.jpg", "/images/granola-coconut-bowl.jpg"],
+      "description": "Golden, toasty granola with coconut.",
+      "available": true,
+      "featured": true,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "chocolate-granola",
+      "name": "Chocolate Granola",
+      "category": "granola",
+      "price": null,
+      "variants": [],
+      "images": ["/images/granola-chocolate.jpg"],
+      "description": "Rich chocolate granola for a sweeter morning.",
+      "available": true,
+      "featured": false,
+      "etsyUrl": null,
+      "reviewed": false
+    }
+  ],
+  "customOccasions": [
+    "Birthday",
+    "Graduation",
+    "Wedding",
+    "Baby",
+    "Anniversary",
+    "Father's Day",
+    "Mother's Day",
+    "Valentine's Day",
+    "Teacher appreciation",
+    "Faith",
+    "Business / professional event",
+    "Other"
+  ],
+  "faq": [
+    {
+      "q": "How do I order?",
+      "a": "Add what you'd like to your bag and check out — we'll open WhatsApp with your order already written out, so all you need to do is press send. You can also message us on WhatsApp any time, or shop on Etsy."
+    },
+    {
+      "q": "Can I get a custom card?",
+      "a": "Yes! We make custom cards for every occasion — for personal moments, professional events, and everything in between. Tell us what you have in mind on the custom cards page."
+    },
+    {
+      "q": "Do you deliver, or can I pick up?",
+      "a": null
+    },
+    {
+      "q": "How do I pay?",
+      "a": null
+    },
+    {
+      "q": "How far in advance should I order custom cards?",
+      "a": null
+    },
+    {
+      "q": "Do you ship outside Jamaica?",
+      "a": null
+    }
+  ]
+}
