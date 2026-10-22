@@ -40,10 +40,14 @@ async function fillBagAndCheckout(page: Page) {
   await bag.getByRole("link", { name: "Checkout" }).click();
 
   await expect(page).toHaveURL(/\/checkout$/);
+  await submitCheckout(page);
+}
+
+async function submitCheckout(page: Page, notes = "Happy birthday, Mum & Dad!") {
   await page.getByLabel("Name").fill("Test Customer");
   await page.getByLabel("Phone / WhatsApp").fill("876-555-0123");
   await page.getByLabel("Delivery area").fill("New Kingston");
-  await page.getByLabel(/notes/i).fill("Happy birthday, Mum & Dad!");
+  await page.getByLabel(/notes/i).fill(notes);
   await page.getByRole("button", { name: /send order on whatsapp/i }).click();
   await expect(page).toHaveURL(/\/thanks$/);
 }
@@ -124,6 +128,106 @@ test("custom brief hands off to WhatsApp without touching the bag", async ({ pag
   await page.getByRole("button", { name: "I've sent it" }).click();
   await expect(page.getByRole("heading", { name: "We'll be in touch." })).toBeVisible();
   await expect(page.getByTestId("open-cart")).toHaveAccessibleName(/1 item\b/);
+});
+
+test("dismissing a pending order keeps the bag", async ({ page }) => {
+  await stubWindowOpen(page);
+  await fillBagAndCheckout(page);
+  await page.getByRole("button", { name: /not now/i }).click();
+  await expect(page.getByRole("heading", { name: "All set." })).toBeFocused();
+  await expect(page.getByTestId("open-cart")).toHaveAccessibleName(/3 items/);
+  await page.getByTestId("open-cart").click();
+  await expect(page.getByTestId("pending-notice")).toHaveCount(0);
+});
+
+test("editing the bag after writing out an order is flagged", async ({ page }) => {
+  await stubWindowOpen(page);
+  await fillBagAndCheckout(page);
+  await expect(page.getByTestId("bag-changed")).toHaveCount(0);
+  await page.getByTestId("open-cart").click();
+  await page.getByRole("button", { name: `Increase quantity of ${second.name}` }).click();
+  await page.getByRole("button", { name: /close bag/i }).click();
+  await expect(page.getByTestId("bag-changed")).toBeVisible();
+  await expect(page.getByTestId("bag-changed").getByRole("link", { name: "check out again" })).toHaveAttribute(
+    "href",
+    "/checkout",
+  );
+});
+
+test("checking out a second time warns about duplicates and replaces the pending order", async ({ page }) => {
+  await stubWindowOpen(page);
+  await fillBagAndCheckout(page);
+  await page.goto("/checkout");
+  await expect(page.getByRole("form", { name: "Your details" }).getByTestId("pending-notice")).toContainText(
+    "no need to send it again",
+  );
+  await submitCheckout(page, "Second attempt");
+
+  // (page.goto reloaded the page, so only the second window.open is recorded.)
+  const latest = (await opened(page)).at(-1)!;
+  expect(decode(latest)).toContain("Notes: Second attempt");
+  await expect(page.getByRole("link", { name: /open whatsapp again/i })).toHaveAttribute("href", latest);
+});
+
+test("a custom request doesn't replace a waiting order", async ({ page }) => {
+  await stubWindowOpen(page);
+  await fillBagAndCheckout(page);
+  await page.goto("/custom");
+  await page.getByLabel("Occasion").selectOption("Wedding");
+  await page.getByLabel("Name").fill("Test Customer");
+  await page.getByLabel("Phone / WhatsApp").fill("876-555-0123");
+  await page.getByRole("button", { name: /send your brief/i }).click();
+
+  await expect(page.getByRole("heading", { name: "Your request is ready to send." })).toBeVisible();
+  await page.getByTestId("other-handoff").getByRole("button", { name: "View it" }).click();
+  await expect(page.getByRole("heading", { name: "Your order is ready to send." })).toBeVisible();
+});
+
+test("double-tapping checkout opens WhatsApp once", async ({ page }) => {
+  await stubWindowOpen(page);
+  await page.goto(`/shop/${first.slug}`);
+  await page.getByRole("button", { name: "Add to bag" }).click();
+  await page.goto("/checkout");
+  await page.getByLabel("Name").fill("Test Customer");
+  await page.getByLabel("Phone / WhatsApp").fill("876-555-0123");
+  await page.getByLabel("Delivery area").fill("New Kingston");
+  await page.getByRole("button", { name: /send order on whatsapp/i }).dblclick();
+  await expect(page).toHaveURL(/\/thanks$/);
+  expect(await opened(page)).toHaveLength(1);
+});
+
+test("reminders expire after 48 hours but the bag is kept", async ({ page }) => {
+  await page.addInitScript(
+    ({ slug }) => {
+      const old = Date.now() - 49 * 60 * 60 * 1000;
+      const lines = [{ slug, variant: null, qty: 2 }];
+      localStorage.setItem("frankies.cart.v1", JSON.stringify(lines));
+      localStorage.setItem(
+        "frankies.pending.v2",
+        JSON.stringify({ order: { url: "https://wa.me/1?text=x", lines, opened: true, createdAt: old } }),
+      );
+    },
+    { slug: first.slug },
+  );
+  await page.goto("/thanks");
+  await expect(page.getByRole("heading", { name: "Nothing waiting to send." })).toBeVisible();
+  await expect(page.getByTestId("open-cart")).toHaveAccessibleName(/2 items/);
+});
+
+test("every 'Shop by occasion' link opens a real product", async ({ page }) => {
+  await page.goto("/");
+  const links = page.getByRole("navigation", { name: "Shop by occasion" }).getByRole("link");
+  const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute("href")!));
+  expect(hrefs.length).toBeGreaterThan(0);
+  for (const href of hrefs) {
+    const slug = href.replace("/shop/", "");
+    const product = products.find((p) => p.slug === slug);
+    expect(product, href).toBeDefined();
+    expect(product!.available).toBe(true);
+    const res = await page.goto(href);
+    expect(res?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1, name: product!.name })).toBeVisible();
+  }
 });
 
 test("/thanks with nothing pending says so", async ({ page }) => {

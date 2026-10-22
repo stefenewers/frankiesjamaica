@@ -158,24 +158,30 @@
     background: var(--color-brown);
     color: var(--color-bone);
   }
-  .btn-primary:hover:not(:disabled) {
-    background: var(--color-ink);
+  @media (hover: hover) {
+    .btn-primary:hover:not(:disabled) {
+      background: var(--color-ink);
+    }
   }
   .btn-inverse {
     background: var(--color-bone);
     color: var(--color-brown);
   }
-  .btn-inverse:hover {
-    background: var(--color-ink);
-    color: var(--color-bone);
+  @media (hover: hover) {
+    .btn-inverse:hover {
+      background: var(--color-ink);
+      color: var(--color-bone);
+    }
   }
   .btn-outline {
     border: 1px solid var(--color-ink);
     color: var(--color-ink);
   }
-  .btn-outline:hover {
-    background: var(--color-ink);
-    color: var(--color-bone);
+  @media (hover: hover) {
+    .btn-outline:hover {
+      background: var(--color-ink);
+      color: var(--color-bone);
+    }
   }
 
   /* Links */
@@ -188,9 +194,11 @@
       color 200ms,
       text-decoration-color 200ms;
   }
-  .link:hover {
-    color: var(--color-brown);
-    text-decoration-color: currentColor;
+  @media (hover: hover) {
+    .link:hover {
+      color: var(--color-brown);
+      text-decoration-color: currentColor;
+    }
   }
   /* Quiet text link with a travelling arrow. */
   .link-arrow {
@@ -210,8 +218,10 @@
     letter-spacing: 0;
     transition: transform 250ms var(--ease-out-soft);
   }
-  .link-arrow:hover::after {
-    transform: translateX(3px);
+  @media (hover: hover) {
+    .link-arrow:hover::after {
+      transform: translateX(3px);
+    }
   }
 
   /* Form fields — a single rule, no boxes. */
@@ -247,8 +257,10 @@
   .field::placeholder {
     color: color-mix(in srgb, var(--color-ink) 45%, transparent);
   }
-  .field:hover {
-    border-bottom-color: var(--color-ink);
+  @media (hover: hover) {
+    .field:hover {
+      border-bottom-color: var(--color-ink);
+    }
   }
   .field:focus-visible {
     outline: none;
@@ -294,8 +306,10 @@
     border-radius: 9999px;
     transition: background-color 200ms;
   }
-  .icon-btn:hover {
-    background: color-mix(in srgb, var(--color-ink) 7%, transparent);
+  @media (hover: hover) {
+    .icon-btn:hover {
+      background: color-mix(in srgb, var(--color-ink) 7%, transparent);
+    }
   }
 }
 

@@ -99,15 +99,17 @@ export function clearCart() {
   cart.set(EMPTY_CART);
 }
 
-/* ── Pending WhatsApp handoff ─────────────────────────────────── */
+/* ── Pending WhatsApp handoffs ────────────────────────────────── */
 
 /**
- * An order or custom request that has been written out for WhatsApp but not
- * yet confirmed as sent. Opening WhatsApp proves nothing was sent, so the bag
- * is kept until the customer says they've sent it.
+ * An order or custom request written out for WhatsApp but not confirmed as
+ * sent. Opening WhatsApp proves nothing was sent, so the bag is never cleared
+ * automatically — confirming ("I've sent it") is optional and only tidies up.
  */
+export type HandoffKind = "order" | "custom";
+
 export type PendingHandoff = {
-  kind: "order" | "custom";
+  kind: HandoffKind;
   url: string;
   /** Items in the order (empty for custom requests). */
   lines: CartLine[];
@@ -116,39 +118,72 @@ export type PendingHandoff = {
   createdAt: number;
 };
 
-function parsePending(raw: unknown): PendingHandoff | null {
+/** One slot per kind, so a custom request never replaces a waiting order. */
+export type PendingHandoffs = { order: PendingHandoff | null; custom: PendingHandoff | null };
+
+/** Reminders stop after this long. Only the reminder goes — the bag is untouched. */
+export const PENDING_TTL_MS = 48 * 60 * 60 * 1000;
+
+const NO_PENDING: PendingHandoffs = { order: null, custom: null };
+
+function parseHandoff(raw: unknown, kind: HandoffKind): PendingHandoff | null {
   if (typeof raw !== "object" || raw === null) return null;
   const p = raw as Partial<PendingHandoff>;
-  if ((p.kind !== "order" && p.kind !== "custom") || typeof p.url !== "string") return null;
-  if (!p.url.startsWith("https://wa.me/")) return null;
-  return {
-    kind: p.kind,
-    url: p.url,
-    lines: parseLines(p.lines),
-    opened: Boolean(p.opened),
-    createdAt: typeof p.createdAt === "number" ? p.createdAt : 0,
-  };
+  if (typeof p.url !== "string" || !p.url.startsWith("https://wa.me/")) return null;
+  const createdAt = typeof p.createdAt === "number" ? p.createdAt : 0;
+  if (Date.now() - createdAt > PENDING_TTL_MS) return null;
+  return { kind, url: p.url, lines: parseLines(p.lines), opened: Boolean(p.opened), createdAt };
 }
 
-const pending = createLocalStore<PendingHandoff | null>("frankies.pending.v1", parsePending, null);
+function parsePending(raw: unknown): PendingHandoffs {
+  if (typeof raw !== "object" || raw === null) return NO_PENDING;
+  const r = raw as Record<string, unknown>;
+  const order = parseHandoff(r.order, "order");
+  const custom = parseHandoff(r.custom, "custom");
+  return order || custom ? { order, custom } : NO_PENDING;
+}
+
+const pending = createLocalStore<PendingHandoffs>("frankies.pending.v2", parsePending, NO_PENDING);
 
 export const subscribePending = pending.subscribe;
 export const getPending = pending.getSnapshot;
 export const getServerPending = pending.getServerSnapshot;
 
+function setSlot(kind: HandoffKind, value: PendingHandoff | null) {
+  const next = { ...pending.getSnapshot(), [kind]: value };
+  pending.set(next.order || next.custom ? next : NO_PENDING);
+}
+
+/** The most recently written-out handoff, if any. */
+export function latestHandoff(p: PendingHandoffs): PendingHandoff | null {
+  if (p.order && p.custom) return p.order.createdAt >= p.custom.createdAt ? p.order : p.custom;
+  return p.order ?? p.custom;
+}
+
+/** True if the bag no longer matches what was written out for WhatsApp. */
+export function bagChangedSince(handoff: PendingHandoff, bag: CartLine[]): boolean {
+  const key = (lines: CartLine[]) =>
+    lines
+      .map((l) => `${l.slug}|${l.variant ?? ""}|${l.qty}`)
+      .sort()
+      .join(",");
+  return key(handoff.lines) !== key(bag);
+}
+
 /**
  * Open WhatsApp with the prepared message and remember the handoff.
  * Must be called synchronously from a click/submit handler so pop-up blockers allow it.
+ * A new order replaces an older unsent order (the bag holds the same items).
  */
-export function startHandoff(kind: PendingHandoff["kind"], url: string, lines: CartLine[] = []) {
+export function startHandoff(kind: HandoffKind, url: string, lines: CartLine[] = []) {
   const win = window.open(url, "_blank");
   if (win) win.opener = null;
-  pending.set({ kind, url, lines, opened: Boolean(win), createdAt: Date.now() });
+  setSlot(kind, { kind, url, lines, opened: Boolean(win), createdAt: Date.now() });
 }
 
-/** The customer says they've sent it: remove those items from the bag and clear the handoff. */
-export function confirmHandoffSent() {
-  const p = pending.getSnapshot();
+/** Optional: the customer says they've sent it. Removes those items from the bag. */
+export function confirmHandoffSent(kind: HandoffKind) {
+  const p = pending.getSnapshot()[kind];
   if (p?.kind === "order") {
     let lines = cart.getSnapshot();
     for (const sent of p.lines) {
@@ -160,9 +195,10 @@ export function confirmHandoffSent() {
     }
     cart.set(lines.length ? lines : EMPTY_CART);
   }
-  pending.set(null);
+  setSlot(kind, null);
 }
 
-export function cancelHandoff() {
-  pending.set(null);
+/** Stop reminding about a handoff. The bag is left exactly as it is. */
+export function dismissHandoff(kind: HandoffKind) {
+  setSlot(kind, null);
 }

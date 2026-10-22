@@ -27,7 +27,7 @@ export default function Home() {
             <div className="rise rise-delay mt-6 grid gap-10 md:mt-12 md:flex-1 md:grid-cols-7 md:gap-8">
               <div className="md:col-span-4 md:self-start">
                 <p className="lede max-w-sm">
-                  Cards and small gifts from Kingston — made to be given, opened and kept.
+                  Cards and a few small things from Kingston — made to be given, opened and kept.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-5 md:mt-8">
                   <Link href="/shop?category=cards" className="btn btn-primary">
@@ -59,7 +59,7 @@ export default function Home() {
                 preload
                 fetchPriority="high"
                 sizes="(min-width: 1440px) 540px, (min-width: 768px) 40vw, 100vw"
-                className="object-cover"
+                className="object-cover object-top"
               />
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function Home() {
                 The best part of a card happens after it leaves us — the minute you take to write something true,
                 and the moment someone opens it in front of you.
               </p>
-              <p>We make the card. The rest is yours.</p>
+              <p>The card is ours. The rest is yours.</p>
             </div>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function Home() {
           <div className="md:col-span-5 md:pt-8">
             <p className="kicker text-brown">From the Kitchen</p>
             <h2 id="kitchen" className="display-l mt-5">
-              Small-batch granola for slower mornings.
+              Granola for slower mornings.
             </h2>
             <p className="lede mt-8 max-w-sm">
               For the breakfast table, a gift basket, or a friend who needs a good start.
@@ -214,10 +214,10 @@ export default function Home() {
               <p id="story" className="display-l">
                 “Long after the flowers fade and the celebrations end, the card remains.”
               </p>
+              <footer className="meta mt-6">— From FRANKIES on Pinterest</footer>
             </blockquote>
             <p className="mt-8 max-w-sm">
-              FRANKIES was founded by {business.founder} in Kingston, Jamaica, to make the kind of things people
-              hold on to.
+              FRANKIES was founded in Kingston, Jamaica, in {business.founded} by {business.founder}.
             </p>
             <Link href="/about" className="link-arrow mt-8">
               About FRANKIES

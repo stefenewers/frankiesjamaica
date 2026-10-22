@@ -36,7 +36,20 @@ The site describes only this process: brief on WhatsApp → talk through the det
 - Starting prices or a price range.
 - Business / event examples we can show (with permission).
 
-## 4. Brand & accounts
+## 4. Copy on the site that Kendall should sign off
+
+These are written from public sources or are reasonable descriptions of the WhatsApp process — none are invented facts, but Kendall should confirm them before launch:
+
+- **Quotes** — "Long after the flowers fade and the celebrations end, the card remains." (home) and "There's something beautiful about giving a card to someone you love…" (About). Both are taken from FRANKIES graphics on Pinterest and attributed "From FRANKIES on Pinterest". OK to use? Prefer a different attribution?
+- **Founding facts** — "Founded in Kingston, Jamaica, in 2026 by Kendall Todd" and "Est. 2026" (from the LinkedIn company page).
+- **Custom Studio process** — "We talk it through with you on WhatsApp — the design, the words, the quantities and the timing" and "Once everything, including the price, is agreed, you confirm and we get started." Does Kendall design custom cards from scratch, adapt existing designs, or both?
+- **Custom Studio scope** — "personal celebrations, events, businesses and gifts" (her card says "personal moments, professional events, and everything in between").
+- **Delivery** — checkout offers *Delivery* or *Pickup* and asks for a delivery area. If Kendall doesn't deliver (or only to some areas), we'll change the checkout.
+- **Reply promise** — after sending, customers read "We'll reply on WhatsApp to confirm availability, price, delivery or pickup, and payment."
+- **Occasion labels** — products are labelled Birthdays, Just because, Faith, Graduation, Father's Day, Teachers, Valentine's Day. Are Father's Day and Valentine's cards available year-round, or seasonal (set `available: false` off-season)?
+- **Granola** — described only as "Coconut granola" and "Chocolate granola". Is granola still sold? Ingredients and allergens are needed before we say more.
+
+## 5. Brand & accounts
 
 - Is +1 876-886-8573 the right WhatsApp number for orders?
 - Is info@frankiesjamaica.com live? (Seen on the business card in the stone-sign photo.)
@@ -47,7 +60,8 @@ The site describes only this process: brief on WhatsApp → talk through the det
 
 1. The customer checks out; WhatsApp opens with the order written out.
 2. The site does **not** treat that as an order. The bag is kept, and the customer sees "Your order is ready to send" with a button to reopen WhatsApp.
-3. Only when the customer taps **I've sent it** is the bag cleared.
-4. Every order is confirmed by Kendall in the WhatsApp chat — availability, price, delivery or pickup, payment.
+3. Tapping **I've sent it** is optional — it just clears those items from their bag. Customers who don't tap it simply keep their bag; reminders stop after 48 hours.
+4. If a customer checks out twice, the site warns them that the first order may already have been sent — but Kendall may still occasionally receive the same order twice.
+5. Every order is confirmed by Kendall in the WhatsApp chat — availability, price, delivery or pickup, payment.
 
 If `ORDER_EMAIL_ENABLED` is turned on, Kendall also gets an email copy at step 1 — useful for following up on orders that were written out but never sent.

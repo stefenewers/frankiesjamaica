@@ -8,7 +8,7 @@ import {
   getSnapshot,
   subscribe,
   subscribePending,
-  type PendingHandoff,
+  type PendingHandoffs,
 } from "@/lib/cart-store";
 import { resolveLines, type CartLine, type ResolvedLine } from "@/lib/order";
 
@@ -16,8 +16,8 @@ type CartContextValue = {
   lines: CartLine[];
   resolved: ResolvedLine[];
   count: number;
-  /** An order/request written out for WhatsApp but not yet confirmed as sent. */
-  pending: PendingHandoff | null;
+  /** Orders/requests written out for WhatsApp but not confirmed as sent. */
+  pending: PendingHandoffs;
   isOpen: boolean;
   open: () => void;
   close: () => void;

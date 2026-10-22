@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { WhatsAppIcon } from "@/components/icons";
 import { business, customOccasions } from "@/lib/catalog";
 import { startHandoff } from "@/lib/cart-store";
@@ -21,9 +22,16 @@ function Part({ n, title, children }: { n: number; title: string; children: Reac
 
 export function CustomForm() {
   const router = useRouter();
+  // Guards against a double tap opening WhatsApp twice (reset when the page is shown again).
+  const submitting = useRef(false);
+  useEffect(() => {
+    submitting.current = false;
+  }, []);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     const form = new FormData(e.currentTarget);
     const url = buildCustomUrl(business.whatsapp, {
       name: String(form.get("name") ?? ""),

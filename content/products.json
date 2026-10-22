@@ -23,7 +23,7 @@
     {
       "id": "granola",
       "name": "Granola",
-      "blurb": "Small-batch granola for slower mornings.",
+      "blurb": "Granola for slower mornings.",
       "image": "/images/granola-jar.jpg"
     }
   ],
@@ -84,8 +84,8 @@
       "price": null,
       "variants": [],
       "images": [
-        "/images/cards-faith.jpg",
-        "/images/cards-faith-seasons.jpg"
+        "/images/cards-faith-seasons.jpg",
+        "/images/cards-faith.jpg"
       ],
       "description": "Words of faith and encouragement, for every season.",
       "available": true,
@@ -229,7 +229,7 @@
         "/images/granola-coconut-bowl.jpg",
         "/images/granola-cup.jpg"
       ],
-      "description": "Golden, crunchy granola with toasted coconut.",
+      "description": "Coconut granola, for the breakfast table or a gift.",
       "available": true,
       "featured": false,
       "details": {
@@ -252,7 +252,7 @@
       "images": [
         "/images/granola-chocolate.jpg"
       ],
-      "description": "Dark, rich chocolate granola for a slower start.",
+      "description": "Chocolate granola, for a slower start.",
       "available": true,
       "featured": false,
       "details": {
@@ -288,7 +288,7 @@
     },
     {
       "q": "Can I get a custom card?",
-      "a": "Yes. We make cards for personal celebrations, events, businesses and gifts. Tell us about it in the Custom Studio."
+      "a": "Yes — custom cards for personal moments, professional events and everything in between. Tell us what you have in mind in the Custom Studio and we'll talk it through on WhatsApp."
     },
     {
       "q": "Do you deliver, or can I pick up?",

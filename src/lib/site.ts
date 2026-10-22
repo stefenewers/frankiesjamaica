@@ -10,7 +10,7 @@ export const siteUrl = (
 ).replace(/\/$/, "");
 
 export const siteDescription =
-  "FRANKIES is a cards and gifting brand from Kingston, Jamaica — greeting cards, custom cards and small-batch granola. Order online and confirm on WhatsApp.";
+  "FRANKIES is a cards and gifting brand from Kingston, Jamaica — greeting cards, custom cards and granola. Order online and confirm on WhatsApp.";
 
 export const whatsappDisplay = "+1 (876) 886-8573";
 

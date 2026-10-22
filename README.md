@@ -96,9 +96,12 @@ npm test               # Playwright: cart → checkout → WhatsApp link (first 
 
 - Very long orders are shortened so the link stays under ~1,900 characters, the limit that opens reliably on iOS, Android and desktop.
 - Opening WhatsApp doesn't mean an order was sent, so the site treats it as a **pending handoff** (`src/lib/cart-store.ts`):
-  - the bag is kept, and the handoff is saved in `localStorage` so it survives reloads;
-  - `/thanks` says "Your order is ready to send", offers **Open WhatsApp (again)** — prominently if a pop-up blocker stopped it — and only clears the sent items when the customer taps **I've sent it**;
-  - the bag drawer, checkout and the mobile bottom bar remind the customer while an order is waiting.
+  - the bag is never cleared automatically; the handoff is saved in `localStorage` so it survives reloads;
+  - orders and custom requests are kept in separate slots, so one never replaces the other;
+  - `/thanks` says "Your order is ready to send" and offers **Open WhatsApp (again)** — prominently if a pop-up blocker stopped it. **I've sent it** is optional (it clears the sent items); **Not now — dismiss** stops the reminder and leaves the bag alone;
+  - if the bag changes after an order was written out, `/thanks` says so and offers to check out again; checking out again warns that an earlier order may already have been sent;
+  - the bag drawer and checkout show a quiet, dismissible reminder; reminders expire after 48 hours;
+  - double taps on the submit buttons open WhatsApp only once.
 - `/custom` (the Custom Studio) sends a custom card request (occasion, quantity, date needed, message) the same way.
 
 The message builder lives in [`src/lib/order.ts`](src/lib/order.ts).

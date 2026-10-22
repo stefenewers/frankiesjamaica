@@ -2,17 +2,31 @@
 
 import Link from "next/link";
 import { useCart } from "./cart-provider";
+import { dismissHandoff } from "@/lib/cart-store";
 
-/** Reminds the customer that a WhatsApp order/request hasn't been confirmed as sent. */
-export function PendingNotice({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
+/**
+ * Quiet reminder that an order was written out for WhatsApp but not confirmed
+ * as sent. Dismissing only stops the reminder; the bag is untouched.
+ * On checkout it also warns that sending again could duplicate the order.
+ */
+export function PendingNotice({ onNavigate, atCheckout = false }: { onNavigate?: () => void; atCheckout?: boolean }) {
   const { pending } = useCart();
-  if (!pending) return null;
+  const order = pending.order;
+  if (!order) return null;
   return (
-    <p className={`meta border-l-2 border-brown py-1 pl-4 text-ink ${className}`} data-testid="pending-notice">
-      {pending.kind === "order" ? "An order" : "A custom request"} is waiting to be sent on WhatsApp.{" "}
-      <Link href="/thanks" onClick={onNavigate} className="link whitespace-nowrap">
-        Finish sending
-      </Link>
-    </p>
+    <div className="meta border-l-2 border-brown py-1 pl-4 text-ink" data-testid="pending-notice">
+      <p>
+        {atCheckout
+          ? "You wrote out an order for WhatsApp earlier. If you already sent it, there's no need to send it again."
+          : "You have an order written out for WhatsApp."}{" "}
+        <Link href="/thanks" onClick={onNavigate} className="link whitespace-nowrap">
+          {atCheckout ? "View it" : "Finish sending"}
+        </Link>
+        {" · "}
+        <button type="button" className="link" onClick={() => dismissHandoff("order")}>
+          Dismiss
+        </button>
+      </p>
+    </div>
   );
 }

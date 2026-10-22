@@ -5,7 +5,7 @@ import { HowToOrder } from "@/components/how-to-order";
 
 export const metadata: Metadata = {
   title: "Shop",
-  description: "Greeting cards, custom cards and small-batch granola from FRANKIES in Kingston, Jamaica.",
+  description: "Greeting cards, custom cards and granola from FRANKIES in Kingston, Jamaica.",
   alternates: { canonical: "/shop" },
 };
 

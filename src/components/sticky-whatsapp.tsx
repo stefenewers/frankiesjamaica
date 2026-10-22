@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "./cart-provider";
 import { WhatsAppIcon } from "./icons";
@@ -11,25 +10,15 @@ const barClass =
   "flex h-13 w-full items-center justify-between rounded-[var(--radius-xs)] bg-ink px-5 text-bone";
 
 /**
- * Mobile-only quick action, in priority order:
- * an order waiting to be sent → the bag → a small WhatsApp button.
- * Hidden on pages that already end in WhatsApp, and while the bag is open.
+ * Mobile-only quick action: the bag when it has items, otherwise a small
+ * WhatsApp button. Hidden on pages that already end in WhatsApp, and while
+ * the bag is open. (Unsent-order reminders live in the bag and at checkout,
+ * so this bar never nags.)
  */
 export function StickyWhatsApp() {
   const pathname = usePathname();
-  const { count, open, isOpen, pending } = useCart();
+  const { count, open, isOpen } = useCart();
   if (["/checkout", "/custom", "/thanks"].includes(pathname) || isOpen) return null;
-
-  if (pending) {
-    return (
-      <div className="fixed inset-x-0 bottom-0 z-20 p-3 md:hidden">
-        <Link href="/thanks" className={barClass}>
-          <span className="kicker">{pending.kind === "order" ? "Order" : "Request"} not sent yet</span>
-          <span className="kicker">Finish →</span>
-        </Link>
-      </div>
-    );
-  }
 
   if (count > 0) {
     return (

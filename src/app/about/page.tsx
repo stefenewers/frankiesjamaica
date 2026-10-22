@@ -32,7 +32,7 @@ export default function AboutPage() {
               FRANKIES was founded in {business.city.split(",")[0]} in {business.founded} by {business.founder}.
             </p>
             <p>
-              Most of what we say to each other now arrives on a screen and is gone by the evening. FRANKIES makes
+              Most of what we say to each other now arrives on a screen and is gone by the evening. FRANKIES is about
               the other kind of thing: cards and small gifts you can hold, give, open, and put somewhere safe.
             </p>
             <p>
@@ -50,7 +50,7 @@ export default function AboutPage() {
               “There&apos;s something beautiful about giving a card to someone you love. It turns a fleeting moment
               into something lasting.”
             </p>
-            <footer className="meta mt-8">— FRANKIES</footer>
+            <footer className="meta mt-8">— From FRANKIES on Pinterest</footer>
           </blockquote>
           <div className="frame aspect-[3/4] md:col-span-4 md:col-start-9">
             <Image

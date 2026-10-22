@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/components/cart-provider";
 import { WhatsAppIcon } from "@/components/icons";
 import { PendingNotice } from "@/components/pending-notice";
@@ -15,6 +15,12 @@ export function CheckoutForm() {
   const { resolved, lines } = useCart();
   const router = useRouter();
   const [method, setMethod] = useState<DeliveryMethod>("delivery");
+  // Guards against a double tap opening WhatsApp twice. Reset whenever the page is
+  // shown again (Next keeps visited pages alive, so effects re-run on return).
+  const submitting = useRef(false);
+  useEffect(() => {
+    submitting.current = false;
+  }, []);
 
   if (resolved.length === 0) {
     return (
@@ -29,6 +35,8 @@ export function CheckoutForm() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     const form = new FormData(e.currentTarget);
     const customer: Customer = {
       name: String(form.get("name") ?? ""),
@@ -56,7 +64,7 @@ export function CheckoutForm() {
   return (
     <div className="grid gap-16 md:grid-cols-12 md:gap-8">
       <form onSubmit={handleSubmit} className="space-y-10 md:col-span-6" aria-label="Your details">
-        <PendingNotice />
+        <PendingNotice atCheckout />
         <p className="kicker">Your details</p>
         <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
           <div>
@@ -146,7 +154,7 @@ export function CheckoutForm() {
         </div>
       </form>
 
-      <aside aria-labelledby="summary" className="md:col-span-5 md:col-start-8">
+      <aside aria-labelledby="summary" className="order-first md:order-none md:col-span-5 md:col-start-8">
         <div className="md:sticky md:top-[calc(var(--header-h)+2.5rem)]">
           <h2 id="summary" className="kicker pb-4 rule-b">
             Order summary
