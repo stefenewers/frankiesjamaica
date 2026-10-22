@@ -1,0 +1,15 @@
+---
+description: FRANKIES design baseline — mandatory for every change in this repository
+alwaysApply: true
+---
+
+# FRANKIES design baseline (always applies)
+
+Read and follow **AGENTS.md** at the root of this repository before every change. It is mandatory.
+
+- The site in `baseline/` (see `baseline/screenshots/`) is the approved 100% baseline. Changes should be minor enhancements.
+- Kendall, the owner, is not a developer. Explain everything in plain language.
+- Run `node scripts/check-baseline.mjs` in the terminal before and after every change. Show her every ⛔ STOP / ⚠️ CAUTION line exactly as printed.
+- Before any request that changes colours, fonts, logo, layout, sections, animations, the WhatsApp ordering, or adds scripts/frameworks: give the “Heads up, Kendall” warning from AGENTS.md and wait for her explicit “yes, change the design”.
+- Never run `scripts/approve-baseline.mjs` unless Kendall explicitly approves. Never edit `baseline/`, the guard scripts, `.githooks/`, `.github/workflows/` or `vercel.json` to silence a warning. Never use `--no-verify` or force-push.
+- Never invent prices, products, reviews or other facts.

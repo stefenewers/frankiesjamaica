@@ -1,6 +1,5 @@
 {
   "framework": null,
-  "buildCommand": null,
-  "installCommand": null,
+  "buildCommand": "node scripts/check-baseline.mjs --ci",
   "outputDirectory": "."
 }

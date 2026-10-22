@@ -1,0 +1,10 @@
+#!/bin/sh
+# FRANKIES design guard: runs before every commit on this computer.
+# If it finds a ⛔ STOP, the commit is cancelled so the problem never reaches the live site.
+node scripts/check-baseline.mjs
+status=$?
+if [ $status -ne 0 ]; then
+  echo "Commit cancelled by the FRANKIES design guard (see above)."
+  echo "Undo the change, or have Kendall approve it with: node scripts/approve-baseline.mjs \"reason\""
+fi
+exit $status

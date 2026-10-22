@@ -1,5 +1,7 @@
 # FRANKIES
 
+> **Kendall:** read [`FOR_KENDALL.md`](FOR_KENDALL.md). **AI assistants:** read and follow [`AGENTS.md`](AGENTS.md) before any change.
+
 Cards from Kingston, Jamaica. A static, no-build site: open the envelope, explore occasions, write your message inside a real FRANKIES card, and send the order on WhatsApp.
 
 ## What's here
@@ -39,3 +41,18 @@ Push to `main`; Vercel serves the files directly. If the Vercel project still ha
 - Real-device testing on iPhone and Android, including the Instagram and WhatsApp in-app browsers.
 
 The previous Next.js build of the site (cart, checkout, tests, merchant handoff notes) is in git history at commit `cdcd58b`.
+
+## Design baseline & guardrails
+
+The site as of `baseline-v1` is the approved design baseline. It is protected in three places:
+
+| Layer | What it does |
+| --- | --- |
+| `AGENTS.md` (+ `CLAUDE.md`, `GEMINI.md`, `.cursor/rules/`, `.github/copilot-instructions.md`) | Rules every AI coding tool reads automatically: traffic-light change levels, a mandatory plain-English warning to Kendall, and what never to touch. |
+| `scripts/check-baseline.mjs` | Compares the site with `baseline/baseline.json`: brand tokens, fonts, section order, signature features, WhatsApp number, outside scripts, broken images, occasion colours, how much code changed, page weight. Prints ⛔ STOP / ⚠️ CAUTION / ℹ️ notes in plain English. |
+| `.githooks/pre-commit`, `.github/workflows/design-guard.yml`, `vercel.json` | Runs the check before commits, on GitHub, and as Vercel's build step, so a STOP never goes live (the previous deploy stays up). |
+
+- Check: `node scripts/check-baseline.mjs`
+- Approve a deliberate design change (Kendall only): `node scripts/approve-baseline.mjs "reason"` — logged in `baseline/APPROVED_CHANGES.md`.
+- Reference screenshots of the approved look: `baseline/screenshots/`.
+- Enable the commit hook in a fresh clone: `git config core.hooksPath .githooks`.
