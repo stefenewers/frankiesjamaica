@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FRANKIES Paper Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:wght@400..700&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap">
+<style>
+:root { color-scheme: light; --cream: #F6F1E8; --paper: #FFF9F2; --espresso: #2C201B; --brown: #6D3614; --kraft: #C49A6C; --muted: #5E4E44; --line: rgba(44,32,27,.14);
+  --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body { background: var(--cream) var(--noise); color: var(--espresso); font: 16px/1.5 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif; padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 60px max(16px, env(safe-area-inset-left, 0px)); }
+.inner { max-width: 1180px; margin: 0 auto; }
+a { color: inherit; }
+:focus-visible { outline: 2.5px solid var(--brown); outline-offset: 3px; border-radius: 4px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 0 36px; }
+header img { height: 24px; width: auto; }
+h1 { font: 700 clamp(40px, 6vw, 80px)/.92 'Bricolage Grotesque', sans-serif; letter-spacing: -.045em; margin: 0 0 12px; text-wrap: balance; }
+.lede { max-width: 40em; color: var(--muted); margin: 0 0 40px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+.exp { background: var(--paper); border-radius: 22px; padding: 22px; display: grid; gap: 16px; align-content: start; box-shadow: 0 1px 2px rgba(44,32,27,.06); }
+.exp h2 { font: 700 26px 'Bricolage Grotesque', sans-serif; letter-spacing: -.03em; margin: 0; }
+.verdict { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.verdict.in { color: #2F6650; } .verdict.out { color: var(--brown); }
+.exp p { margin: 0; color: var(--muted); font-size: 15px; }
+.stage { position: relative; height: 340px; border-radius: 16px; background: #EFE5D8 var(--noise); display: grid; place-items: center; overflow: hidden; }
+.btn { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 0; cursor: pointer; font: 600 14px 'Instrument Sans', sans-serif; background: var(--espresso); color: var(--paper); }
+.btn.ghost { background: transparent; color: var(--espresso); box-shadow: inset 0 0 0 1.5px currentColor; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+/* Scratch */
+.scratch { position: relative; width: 200px; aspect-ratio: 5/7; border-radius: 3px; overflow: hidden; box-shadow: 0 2px 3px rgba(0,0,0,.12), 0 20px 34px -14px rgba(30,15,6,.45); }
+.scratch img { width: 100%; height: 100%; object-fit: cover; }
+.scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; transition: opacity .5s; }
+/* Pencil */
+.pencil-paper { position: relative; width: 100%; height: 100%; background: repeating-linear-gradient(180deg, transparent 0 31px, rgba(110,135,170,.22) 31px 32px) 0 24px / 100% calc(100% - 24px) no-repeat, #FFFDF8 var(--noise); }
+.pencil-paper canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.tool[aria-pressed="true"] { background: var(--espresso); color: var(--paper); box-shadow: none; }
+/* Tear */
+.big-sheet { position: absolute; left: 12%; right: 12%; top: 28px; bottom: 28px; border-radius: 3px; padding: 38px 24px 20px; user-select: none; touch-action: pan-y; cursor: grab; will-change: transform;
+  background: radial-gradient(circle at 7px 12px, rgba(44,32,27,.35) 1.8px, transparent 2.4px) 0 0 / 14px 24px repeat-x, repeating-linear-gradient(180deg, transparent 0 31px, rgba(110,135,170,.22) 31px 32px) 0 30px / 100% calc(100% - 30px) no-repeat, #FFFDF8 var(--noise);
+  box-shadow: 0 1px 1px rgba(44,32,27,.1), 0 10px 20px -10px rgba(44,32,27,.4); transform-origin: 50% 0; }
+.big-sheet::before { content: ""; position: absolute; left: 0; right: 0; top: 23px; border-top: 1px dashed rgba(44,32,27,.2); }
+.big-sheet p { margin: 0; font: italic 22px/32px 'Newsreader', Georgia, serif; }
+.big-under { position: absolute; left: 12%; right: 12%; top: 28px; bottom: 28px; border-radius: 3px; background: #FFFBF4; transform: translateY(5px) rotate(.6deg); box-shadow: 0 1px 0 rgba(44,32,27,.1); }
+.stub { position: absolute; left: 12%; right: 12%; top: 28px; height: 24px; border-radius: 3px 3px 0 0; background: #FFFDF8; clip-path: polygon(0 0, 100% 0, 100% 70%, 96% 100%, 92% 65%, 88% 100%, 84% 70%, 80% 100%, 76% 65%, 72% 100%, 68% 70%, 64% 100%, 60% 65%, 56% 100%, 52% 70%, 48% 100%, 44% 65%, 40% 100%, 36% 70%, 32% 100%, 28% 65%, 24% 100%, 20% 70%, 16% 100%, 12% 65%, 8% 100%, 4% 70%, 0 100%); opacity: 0; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<div class="inner">
+  <header>
+    <img src="img/wordmark-brown.png" alt="FRANKIES">
+    <a href="./" class="btn ghost">Back to the shop</a>
+  </header>
+  <h1>Paper lab</h1>
+  <p class="lede">Paper interactions we built and tested. Each card says whether it made it into the shop, and why. They all work with mouse, touch and keyboard, and respect reduced motion.</p>
+
+  <div class="grid">
+    <section class="exp" aria-labelledby="t1">
+      <span class="verdict out">Kept in the lab</span>
+      <h2 id="t1">Scratch to reveal</h2>
+      <div class="stage">
+        <div class="scratch" id="scratch">
+          <img src="img/cards/birthday-cake.jpg" alt="A Very Happy Birthday card">
+          <canvas id="scratchCanvas" aria-label="Scratch the foil to reveal a card" role="img"></canvas>
+        </div>
+      </div>
+      <div class="row"><button class="btn" type="button" id="scratchReveal">Reveal</button><button class="btn ghost" type="button" id="scratchReset">Cover again</button></div>
+      <p>Satisfying, but it hides products behind effort. Best kept for a seasonal moment (a "card of the week" on Instagram, a gift-card reveal) rather than the shop.</p>
+    </section>
+
+    <section class="exp" aria-labelledby="t2">
+      <span class="verdict out">Kept in the lab</span>
+      <h2 id="t2">Pencil writing &amp; rubbing out</h2>
+      <div class="stage" style="padding: 18px">
+        <div class="pencil-paper"><canvas id="pencil" aria-label="Drawing area: write with your pointer or finger" role="img"></canvas></div>
+      </div>
+      <div class="row">
+        <button class="btn ghost tool" type="button" id="toolPencil" aria-pressed="true">Pencil</button>
+        <button class="btn ghost tool" type="button" id="toolEraser" aria-pressed="false">Eraser</button>
+        <button class="btn" type="button" id="rub">Rub it all out</button>
+      </div>
+      <p>Freehand writing can't travel through a WhatsApp text order, so it would promise something we can't deliver. The rub-out feel lives on in the shop as the typed-message eraser.</p>
+    </section>
+
+    <section class="exp" aria-labelledby="t3">
+      <span class="verdict in">In the shop (simplified)</span>
+      <h2 id="t3">Tear along the perforation</h2>
+      <div class="stage" id="tearStage">
+        <div class="big-under"></div>
+        <div class="stub" id="stub"></div>
+        <div class="big-sheet" id="bigSheet"><p id="bigText">Pull me sideways. I’ll resist for a moment, then tear.</p></div>
+      </div>
+      <div class="row"><button class="btn" type="button" id="tearBtn">Tear off</button><button class="btn ghost" type="button" id="tearReset">New sheet</button></div>
+      <p>This version leaves a torn stub behind. The shop uses a lighter version on the starter-line notepad, where tearing reads naturally as "next idea".</p>
+    </section>
+  </div>
+</div>
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s) => document.querySelector(s);
+
+  /* Scratch: kraft foil drawn on a canvas, removed with destination-out strokes */
+  const sc = $('#scratchCanvas'), sctx = sc.getContext('2d');
+  let scratched = false, lastPt = null, checkT = 0;
+  function coverFoil() {
+    const r = sc.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    sc.width = r.width * dpr; sc.height = r.height * dpr; sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sctx.globalCompositeOperation = 'source-over';
+    const g = sctx.createLinearGradient(0, 0, r.width, r.height);
+    g.addColorStop(0, '#b98b5d'); g.addColorStop(.5, '#d6ae80'); g.addColorStop(1, '#a87b4f');
+    sctx.fillStyle = g; sctx.fillRect(0, 0, r.width, r.height);
+    for (let i = 0; i < 900; i++) { sctx.fillStyle = `rgba(60,30,10,${Math.random() * .08})`; sctx.fillRect(Math.random() * r.width, Math.random() * r.height, 1.5, 1.5); }
+    sctx.fillStyle = 'rgba(255,249,242,.92)'; sctx.font = '600 15px Instrument Sans, sans-serif'; sctx.textAlign = 'center';
+    sctx.fillText('Scratch here', r.width / 2, r.height / 2);
+    sc.style.opacity = '1'; scratched = false;
+  }
+  function scratchAt(x, y) {
+    sctx.globalCompositeOperation = 'destination-out';
+    sctx.lineWidth = 30; sctx.lineCap = 'round'; sctx.lineJoin = 'round';
+    sctx.beginPath();
+    if (lastPt) { sctx.moveTo(lastPt.x, lastPt.y); sctx.lineTo(x, y); } else { sctx.arc(x, y, 15, 0, Math.PI * 2); sctx.fill(); }
+    sctx.stroke(); lastPt = { x, y };
+    const now = performance.now();
+    if (now - checkT > 250) { checkT = now; checkCleared(); }
+  }
+  function checkCleared() {
+    const d = sctx.getImageData(0, 0, sc.width, sc.height).data; let clear = 0, n = 0;
+    for (let i = 3; i < d.length; i += 4 * 40) { n++; if (d[i] < 40) clear++; }
+    if (clear / n > .55) reveal();
+  }
+  function reveal() { if (scratched) return; scratched = true; sc.style.opacity = '0'; }
+  const cap = (el, id) => { try { el.setPointerCapture(id); } catch {} };
+  sc.addEventListener('pointerdown', (e) => { cap(sc, e.pointerId); lastPt = null; const r = sc.getBoundingClientRect(); scratchAt(e.clientX - r.left, e.clientY - r.top); });
+  sc.addEventListener('pointermove', (e) => { if (!sc.hasPointerCapture(e.pointerId)) return; const r = sc.getBoundingClientRect(); scratchAt(e.clientX - r.left, e.clientY - r.top); });
+  sc.addEventListener('pointerup', () => { lastPt = null; });
+  $('#scratchReveal').addEventListener('click', reveal);
+  $('#scratchReset').addEventListener('click', coverFoil);
+  if (reduce) { /* keyboard / reduced motion: the Reveal button is the primary path */ }
+
+  /* Pencil: pressure-aware graphite strokes with a little grain; eraser and a rub-out sweep */
+  const pc = $('#pencil'), pctx = pc.getContext('2d');
+  let tool = 'pencil', prev = null;
+  function sizePencil() { const r = pc.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); pc.width = r.width * dpr; pc.height = r.height * dpr; pctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function stroke(p) {
+    if (!prev) { prev = p; return; }
+    const dist = Math.hypot(p.x - prev.x, p.y - prev.y), steps = Math.max(1, Math.ceil(dist / 1.5));
+    for (let i = 0; i < steps; i++) {
+      const t = i / steps, x = prev.x + (p.x - prev.x) * t, y = prev.y + (p.y - prev.y) * t;
+      if (tool === 'eraser') { pctx.globalCompositeOperation = 'destination-out'; pctx.beginPath(); pctx.arc(x, y, 12, 0, Math.PI * 2); pctx.fill(); continue; }
+      pctx.globalCompositeOperation = 'source-over';
+      const w = 1.1 + (p.pressure || .5) * 1.6;
+      pctx.fillStyle = `rgba(52,48,46,${.35 + Math.random() * .35})`;
+      pctx.beginPath(); pctx.arc(x + (Math.random() - .5) * .6, y + (Math.random() - .5) * .6, w * (.7 + Math.random() * .4), 0, Math.PI * 2); pctx.fill();
+    }
+    prev = p;
+  }
+  pc.addEventListener('pointerdown', (e) => { cap(pc, e.pointerId); prev = null; const r = pc.getBoundingClientRect(); stroke({ x: e.clientX - r.left, y: e.clientY - r.top, pressure: e.pressure }); });
+  pc.addEventListener('pointermove', (e) => { if (!pc.hasPointerCapture(e.pointerId)) return; const r = pc.getBoundingClientRect(); for (const ev of (e.getCoalescedEvents ? e.getCoalescedEvents() : [e])) stroke({ x: ev.clientX - r.left, y: ev.clientY - r.top, pressure: ev.pressure }); });
+  pc.addEventListener('pointerup', () => { prev = null; });
+  const setTool = (t) => { tool = t; $('#toolPencil').setAttribute('aria-pressed', String(t === 'pencil')); $('#toolEraser').setAttribute('aria-pressed', String(t === 'eraser')); };
+  $('#toolPencil').addEventListener('click', () => setTool('pencil'));
+  $('#toolEraser').addEventListener('click', () => setTool('eraser'));
+  $('#rub').addEventListener('click', () => {
+    const r = pc.getBoundingClientRect();
+    if (reduce) { pctx.clearRect(0, 0, r.width, r.height); return; }
+    let x = 0; pctx.globalCompositeOperation = 'destination-out';
+    const sweep = () => { pctx.fillRect(x, 0, 26, r.height); x += 22; if (x < r.width + 26) requestAnimationFrame(sweep); };
+    requestAnimationFrame(sweep);
+  });
+
+  /* Tear: resistance, then separation, leaving a torn stub on the pad */
+  const sheet = $('#bigSheet'), stub = $('#stub');
+  const lines = ['Pull me sideways. I’ll resist for a moment, then tear.', 'Happy birthday! Here’s to your best year yet.', 'Thinking of you today.', 'So proud of you. This is just the beginning.'];
+  let li = 0, sx = 0, drag = false, busy = false;
+  function tear(dir = 1, startT = 'none') {
+    if (busy) return; busy = true;
+    stub.style.opacity = '1';
+    const done = () => { sheet.style.transform = ''; sheet.style.opacity = ''; busy = false; };
+    if (reduce) { sheet.style.opacity = '0'; setTimeout(() => { done(); newSheet(); }, 10); return; }
+    sheet.style.clipPath = 'polygon(0 6%, 4% 3%, 8% 6.5%, 12% 3.5%, 16% 6%, 20% 3%, 24% 6%, 28% 3.5%, 32% 6.5%, 36% 3%, 40% 6%, 44% 3.5%, 48% 6.5%, 52% 3%, 56% 6%, 60% 3%, 64% 6%, 68% 3.5%, 72% 6.5%, 76% 3%, 80% 6%, 84% 3.5%, 88% 6.5%, 92% 3%, 96% 6%, 100% 3.5%, 100% 100%, 0 100%)';
+    sheet.animate([{ transform: startT }, { transform: `translate(${dir * 10}px, 4px) rotate(${dir * 2.5}deg)`, offset: .2 }, { transform: `translate(${dir * 420}px, 140px) rotate(${dir * 28}deg)`, opacity: 0 }], { duration: 640, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' }).onfinish = () => { sheet.getAnimations().forEach((a) => a.cancel()); sheet.style.opacity = '0'; sheet.style.clipPath = ''; busy = false; setTimeout(newSheet, 350); };
+  }
+  function newSheet() {
+    li = (li + 1) % lines.length; $('#bigText').textContent = lines[li];
+    sheet.style.opacity = ''; sheet.style.transform = ''; stub.style.opacity = '0';
+    if (!reduce) sheet.animate([{ transform: 'translateY(8px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,.9,.25,1.12)' });
+  }
+  sheet.addEventListener('pointerdown', (e) => { if (busy) return; drag = true; sx = e.clientX; sheet.style.transition = 'none'; });
+  sheet.addEventListener('pointermove', (e) => { if (!drag) return; const dx = e.clientX - sx; if (Math.abs(dx) > 6 && !sheet.hasPointerCapture(e.pointerId)) cap(sheet, e.pointerId); const pull = Math.sign(dx) * Math.min(Math.abs(dx), 160); sheet.style.transform = `translate(${pull * .5}px, ${Math.abs(pull) * .07}px) rotate(${pull * .08}deg)`; });
+  const end = (e) => { if (!drag) return; drag = false; const dx = e.clientX - sx; if (Math.abs(dx) > 100) tear(Math.sign(dx), sheet.style.transform); else { sheet.style.transition = 'transform .5s cubic-bezier(.2,.9,.25,1.25)'; sheet.style.transform = ''; } };
+  sheet.addEventListener('pointerup', end); sheet.addEventListener('pointercancel', end);
+  $('#tearBtn').addEventListener('click', () => tear(1));
+  $('#tearReset').addEventListener('click', newSheet);
+
+  const init = () => { coverFoil(); sizePencil(); };
+  if (document.fonts) document.fonts.ready.then(init); else init();
+  addEventListener('resize', () => { coverFoil(); sizePencil(); });
+})();
+</script>
+</body>
+</html>
