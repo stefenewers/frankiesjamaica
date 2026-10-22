@@ -505,6 +505,21 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   .mbar img { width: 34px; aspect-ratio: 5/7; object-fit: cover; border-radius: 2px; }
 }
 
+/* Granola cursor: desktop mice and trackpads only. Clickable things get a tilted, slightly larger cluster;
+   text fields keep the text cursor and the notepad keeps its grab hand so their affordances stay clear. */
+@media (hover: hover) and (pointer: fine) {
+  html, body { cursor: url(img/cursor-granola-32.png) 16 16, auto;
+    cursor: -webkit-image-set(url(img/cursor-granola-32.png) 1x, url(img/cursor-granola-64.png) 2x) 16 16, auto;
+    cursor: image-set(url(img/cursor-granola-32.png) 1x, url(img/cursor-granola-64.png) 2x) 16 16, auto; }
+  a[href], button:not(:disabled), [role="tab"], label, select, summary, .card-hit, .pocket, input[type="checkbox"], input[type="radio"] {
+    cursor: url(img/cursor-granola-hover-40.png) 20 20, pointer !important;
+    cursor: -webkit-image-set(url(img/cursor-granola-hover-40.png) 1x, url(img/cursor-granola-hover-80.png) 2x) 20 20, pointer !important;
+    cursor: image-set(url(img/cursor-granola-hover-40.png) 1x, url(img/cursor-granola-hover-80.png) 2x) 20 20, pointer !important; }
+  input:not([type="checkbox"]):not([type="radio"]), textarea { cursor: text !important; }
+  .sheet:not(.under) { cursor: grab !important; }
+  .sheet:not(.under):active { cursor: grabbing !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
