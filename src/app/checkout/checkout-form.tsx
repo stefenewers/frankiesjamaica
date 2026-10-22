@@ -1,11 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/components/cart-provider";
 import { WhatsAppIcon } from "@/components/icons";
-import { ASK_FOR_PRICE, business, formatPrice } from "@/lib/catalog";
+import { PRICE_PENDING, business, formatPrice } from "@/lib/catalog";
 import { clearCart, rememberOrderUrl } from "@/lib/cart-store";
 import { buildOrderUrl, formatSubtotal, subtotal, type Customer, type DeliveryMethod } from "@/lib/order";
 
@@ -16,9 +17,9 @@ export function CheckoutForm() {
 
   if (resolved.length === 0) {
     return (
-      <div className="rounded-2xl bg-paper p-8 text-center">
-        <p className="font-hand text-3xl text-espresso">Your bag is empty</p>
-        <Link href="/shop" className="btn btn-primary mt-5">
+      <div className="py-10">
+        <p className="display-m">Your bag is empty.</p>
+        <Link href="/shop" className="link-arrow mt-8">
           Browse the shop
         </Link>
       </div>
@@ -53,9 +54,10 @@ export function CheckoutForm() {
   }
 
   return (
-    <div className="grid gap-10 md:grid-cols-[1fr_22rem]">
-      <form onSubmit={handleSubmit} className="space-y-5" aria-label="Your details">
-        <div className="grid gap-5 sm:grid-cols-2">
+    <div className="grid gap-16 md:grid-cols-12 md:gap-8">
+      <form onSubmit={handleSubmit} className="space-y-10 md:col-span-6" aria-label="Your details">
+        <p className="kicker">Your details</p>
+        <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
           <div>
             <label htmlFor="name" className="label">
               Name
@@ -82,12 +84,12 @@ export function CheckoutForm() {
         </div>
 
         <fieldset>
-          <legend className="label">Delivery or pickup?</legend>
+          <legend className="label mb-3">Delivery or pickup</legend>
           <div className="grid grid-cols-2 gap-3">
             {(["delivery", "pickup"] as const).map((m) => (
               <label
                 key={m}
-                className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-latte-dark bg-[#fffdfa] px-4 has-[:checked]:border-espresso has-[:checked]:ring-1 has-[:checked]:ring-espresso"
+                className="flex min-h-12 cursor-pointer items-center gap-3 rounded-[var(--radius-xs)] border border-rule-strong px-4 transition-colors hover:border-ink has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-bone has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brown"
               >
                 <input
                   type="radio"
@@ -95,9 +97,9 @@ export function CheckoutForm() {
                   value={m}
                   checked={method === m}
                   onChange={() => setMethod(m)}
-                  className="accent-espresso"
+                  className="sr-only"
                 />
-                {m === "delivery" ? "Delivery" : "Pickup"}
+                <span className="kicker">{m === "delivery" ? "Delivery" : "Pickup"}</span>
               </label>
             ))}
           </div>
@@ -105,8 +107,8 @@ export function CheckoutForm() {
 
         <div>
           <label htmlFor="area" className="label">
-            {method === "delivery" ? "Delivery area" : "Preferred pickup day/time"}{" "}
-            <span className="font-normal text-mocha">{method === "delivery" ? "" : "(optional)"}</span>
+            {method === "delivery" ? "Delivery area" : "Preferred pickup day/time"}
+            {method === "pickup" && <span className="label-hint"> — optional</span>}
           </label>
           <input
             id="area"
@@ -120,7 +122,7 @@ export function CheckoutForm() {
 
         <div>
           <label htmlFor="notes" className="label">
-            Notes <span className="font-normal text-mocha">(optional)</span>
+            Notes <span className="label-hint">— optional</span>
           </label>
           <textarea
             id="notes"
@@ -132,32 +134,47 @@ export function CheckoutForm() {
           />
         </div>
 
-        <button type="submit" className="btn btn-whatsapp w-full sm:w-auto">
-          <WhatsAppIcon /> Send order on WhatsApp
-        </button>
-        <p className="text-sm text-mocha">
-          This opens WhatsApp with your order written out — just press send. Nothing is charged here.
-        </p>
+        <div className="space-y-4 pt-2">
+          <button type="submit" className="btn btn-primary w-full">
+            <WhatsAppIcon className="size-4" /> Send order on WhatsApp
+          </button>
+          <p className="meta">
+            WhatsApp opens with your order written out — press send and we&apos;ll confirm delivery and payment with
+            you there. Nothing is charged on this site.
+          </p>
+        </div>
       </form>
 
-      <aside aria-labelledby="summary" className="h-fit rounded-2xl bg-paper p-6">
-        <h2 id="summary" className="mb-4 text-2xl">
-          Your order
-        </h2>
-        <ul className="space-y-3 text-sm">
-          {resolved.map((l) => (
-            <li key={`${l.product.slug}:${l.variant ?? ""}`} className="flex justify-between gap-4">
-              <span>
-                {l.qty} × {l.product.name}
-                {l.variant && <span className="text-mocha"> ({l.variant})</span>}
-              </span>
-              <span className="whitespace-nowrap">{l.lineTotal === null ? ASK_FOR_PRICE : formatPrice(l.lineTotal)}</span>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 flex justify-between gap-4 border-t border-sand pt-4 font-medium">
-          <span>Subtotal</span>
-          <span className="text-right">{formatSubtotal(subtotal(resolved))}</span>
+      <aside aria-labelledby="summary" className="md:col-span-5 md:col-start-8">
+        <div className="md:sticky md:top-[calc(var(--header-h)+2.5rem)]">
+          <h2 id="summary" className="kicker pb-4 rule-b">
+            Order summary
+          </h2>
+          <ul>
+            {resolved.map((l) => (
+              <li key={`${l.product.slug}:${l.variant ?? ""}`} className="flex gap-4 py-5 rule-b">
+                <div className="frame aspect-[4/5] w-14 shrink-0">
+                  <Image src={l.product.images[0]} alt="" fill sizes="56px" className="object-cover" />
+                </div>
+                <div className="flex flex-1 justify-between gap-4">
+                  <div>
+                    <p className="title text-lg">{l.product.name}</p>
+                    <p className="meta">
+                      Qty {l.qty}
+                      {l.variant && ` · ${l.variant}`}
+                    </p>
+                  </div>
+                  <p className="meta whitespace-nowrap">
+                    {l.lineTotal === null ? PRICE_PENDING.short : formatPrice(l.lineTotal)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-baseline justify-between gap-4 pt-5">
+            <span className="kicker">Subtotal</span>
+            <span className="text-right">{formatSubtotal(subtotal(resolved))}</span>
+          </div>
         </div>
       </aside>
     </div>

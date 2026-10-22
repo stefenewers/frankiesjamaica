@@ -10,25 +10,27 @@ export const metadata: Metadata = {
 
 export default function ThanksPage() {
   return (
-    <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2">
-      <div className="space-y-5">
-        <p className="font-hand text-4xl text-espresso">Thank you!</p>
-        <h1 className="text-4xl sm:text-5xl">Your order is on its way to us</h1>
-        <p className="leading-relaxed">
-          Just press <strong>send</strong> in WhatsApp and we&apos;ll get back to you to confirm the details,
-          delivery or pickup, and payment.
+    <div className="page grid gap-14 pb-[var(--section-y)] pt-14 md:grid-cols-12 md:items-center md:gap-8 md:pt-24">
+      <div className="md:col-span-6">
+        <p className="kicker text-brown">Thank you</p>
+        <h1 className="display-xl mt-6">Nearly there.</h1>
+        <p className="lede mt-8 max-w-md">
+          Press <strong className="font-semibold">send</strong> in WhatsApp and we&apos;ll be in touch to confirm the
+          details, delivery or pickup, and payment.
         </p>
-        <ReopenWhatsApp />
-        <Link href="/shop" className="inline-block text-sm underline underline-offset-4">
+        <div className="mt-10">
+          <ReopenWhatsApp />
+        </div>
+        <Link href="/shop" className="link-arrow mt-10">
           Keep browsing
         </Link>
       </div>
-      <div className="relative aspect-square overflow-hidden rounded-2xl bg-paper">
+      <div className="frame aspect-[4/5] md:col-span-4 md:col-start-9">
         <Image
           src="/images/envelope-open-this.jpg"
-          alt="Kraft envelope sealed with a FRANKIES sticker that reads Open This"
+          alt="Kraft envelope closed with a FRANKIES seal reading Open This"
           fill
-          sizes="(min-width: 768px) 30rem, 100vw"
+          sizes="(min-width: 768px) 30vw, 100vw"
           className="object-cover"
         />
       </div>

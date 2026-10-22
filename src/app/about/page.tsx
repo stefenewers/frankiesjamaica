@@ -5,66 +5,73 @@ import { business } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "About",
-  description: business.statement,
+  description: `FRANKIES was founded in Kingston, Jamaica in ${business.founded} by ${business.founder}. Cards and small gifts made to be given, opened and kept.`,
   alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
   return (
     <>
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 md:grid-cols-2">
-        <div className="space-y-6">
-          <p className="eyebrow">About FRANKIES</p>
-          <h1 className="text-4xl sm:text-5xl">Rooted in the beauty of everyday moments</h1>
-          <p className="text-lg leading-relaxed">{business.statement}</p>
-          <p className="leading-relaxed">
-            Founded in {business.city.split(",")[0]} in {business.founded} by {business.founder}.
-          </p>
-        </div>
-        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-paper">
-          <Image
-            src="/images/brand-stone-sign-tall.jpg"
-            alt="Stone sign engraved with FRANKIES beside a vase of greenery"
-            fill
-            priority
-            sizes="(min-width: 768px) 34rem, 100vw"
-            className="object-cover"
-          />
-        </div>
-      </section>
+      <section className="page pb-[var(--section-y)] pt-14 md:pt-24">
+        <p className="kicker text-brown">About</p>
+        <h1 className="display-xl mt-6 max-w-5xl">The little things are the ones people keep.</h1>
 
-      <section className="bg-paper">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 md:grid-cols-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl md:order-2">
+        <div className="mt-16 grid gap-14 md:mt-24 md:grid-cols-12 md:gap-8">
+          <div className="frame aspect-[4/5] md:col-span-5">
             <Image
-              src="/images/lifestyle-gifting.jpg"
-              alt="Two friends embracing, one holding an illustrated FRANKIES card"
+              src="/images/brand-stone-sign-tall.jpg"
+              alt="Stone sign engraved with FRANKIES, beside a vase of trailing greenery"
               fill
-              sizes="(min-width: 768px) 34rem, 100vw"
+              preload
+              sizes="(min-width: 768px) 38vw, 100vw"
               className="object-cover"
             />
           </div>
-          <blockquote className="space-y-4">
-            <p className="font-serif text-2xl leading-relaxed text-espresso sm:text-3xl">
-              “There&apos;s something beautiful about giving a card to someone you love. It turns a fleeting
-              moment into something lasting.”
+          <div className="lede space-y-6 md:col-span-5 md:col-start-7 md:self-end">
+            <p>
+              FRANKIES was founded in {business.city.split(",")[0]} in {business.founded} by {business.founder}.
             </p>
-            <p className="leading-relaxed">
-              Long after the flowers fade and the celebrations end, the card remains — ready to be reopened,
-              bringing the feeling back all over again.
+            <p>
+              Most of what we say to each other now arrives on a screen and is gone by the evening. FRANKIES makes
+              the other kind of thing: cards and small gifts you can hold, give, open, and put somewhere safe.
             </p>
-          </blockquote>
+            <p>
+              Birthdays and graduations, thank-yous and words of faith, the occasions that deserve more than a
+              quick message — and the ordinary days that turn out to matter too.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
-        <p className="font-hand text-4xl text-espresso">fill your cup.</p>
-        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+      <section className="bg-stone">
+        <div className="page section grid gap-12 md:grid-cols-12 md:items-center md:gap-8">
+          <blockquote className="md:col-span-7">
+            <p className="display-l">
+              “There&apos;s something beautiful about giving a card to someone you love. It turns a fleeting moment
+              into something lasting.”
+            </p>
+            <footer className="meta mt-8">— FRANKIES</footer>
+          </blockquote>
+          <div className="frame aspect-[3/4] md:col-span-4 md:col-start-9">
+            <Image
+              src="/images/lifestyle-gifting.jpg"
+              alt="Two friends embracing, one holding an illustrated card"
+              fill
+              sizes="(min-width: 768px) 30vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="page section grid gap-10 md:grid-cols-12 md:items-end md:gap-8">
+        <h2 className="display-m md:col-span-6">Find something worth giving.</h2>
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-5 md:col-span-5 md:col-start-8 md:justify-end">
           <Link href="/shop" className="btn btn-primary">
             Visit the shop
           </Link>
-          <Link href="/custom" className="btn btn-outline">
-            Request a custom card
+          <Link href="/custom" className="link-arrow">
+            Custom Studio
           </Link>
         </div>
       </section>

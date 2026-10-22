@@ -1,74 +1,80 @@
 import Link from "next/link";
-import { EtsyIcon, InstagramIcon, PinterestIcon, WhatsAppIcon } from "./icons";
+import { Wordmark } from "./wordmark";
 import { business } from "@/lib/catalog";
 import { whatsappUrl } from "@/lib/order";
-import { navLinks, whatsappDisplay } from "@/lib/site";
+import { footerLinks, whatsappDisplay } from "@/lib/site";
 
-const socials = [
-  { href: whatsappUrl(business.whatsapp), label: "WhatsApp", Icon: WhatsAppIcon },
-  { href: business.instagram, label: "Instagram", Icon: InstagramIcon },
-  { href: business.pinterest, label: "Pinterest", Icon: PinterestIcon },
-  { href: business.etsy, label: "Etsy", Icon: EtsyIcon },
+const elsewhere = [
+  { href: business.instagram, label: "Instagram" },
+  { href: business.pinterest, label: "Pinterest" },
+  { href: business.etsy, label: "Etsy" },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-mocha pb-24 text-cream md:pb-0">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3">
-        <div className="space-y-3">
-          <p className="wordmark text-2xl">Frankies</p>
-          <p className="font-hand text-2xl text-sand">{business.tagline}</p>
-          <p className="text-sm text-cream/85">{business.city}</p>
-        </div>
-
-        <nav aria-label="Footer">
-          <ul className="space-y-2 text-sm">
-            {navLinks.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href} className="hover:underline">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="space-y-4 text-sm">
-          <p>
-            Order on WhatsApp:{" "}
-            <a href={whatsappUrl(business.whatsapp)} className="underline underline-offset-4">
-              {whatsappDisplay}
-            </a>
-          </p>
-          {business.email && (
-            <p>
-              Email:{" "}
-              <a href={`mailto:${business.email}`} className="underline underline-offset-4">
-                {business.email}
-              </a>
+    <footer className="bg-ink text-bone">
+      <div className="page pb-28 pt-20 md:pb-12 md:pt-28">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-14 md:grid-cols-12 md:gap-8">
+          <div className="col-span-2 md:col-span-5">
+            <Link href="/" aria-label="FRANKIES — home" className="inline-block">
+              <Wordmark tone="bone" className="h-7 w-auto md:h-9" />
+            </Link>
+            <p className="mt-6 max-w-xs font-display text-xl leading-snug text-bone/80">
+              {business.tagline}.
             </p>
-          )}
-          <ul className="flex gap-2" aria-label="FRANKIES elsewhere">
-            {socials.map(({ href, label, Icon }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="grid size-11 place-items-center rounded-full border border-cream/40 hover:bg-cream hover:text-mocha focus-visible:outline-cream"
-                >
-                  <Icon />
-                  <span className="sr-only">{label} (opens in a new tab)</span>
+          </div>
+
+          <nav aria-label="Footer" className="md:col-span-2 md:col-start-7">
+            <p className="kicker mb-5 text-bone/60">Explore</p>
+            <ul className="space-y-3 text-[0.9375rem]">
+              {footerLinks.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="transition-colors hover:text-stone">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="md:col-span-2">
+            <p className="kicker mb-5 text-bone/60">Elsewhere</p>
+            <ul className="space-y-3 text-[0.9375rem]">
+              {elsewhere.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-stone">
+                    {l.label}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="col-span-2 md:col-span-2">
+            <p className="kicker mb-5 text-bone/60">Contact</p>
+            <ul className="space-y-3 text-[0.9375rem]">
+              <li>
+                <a href={whatsappUrl(business.whatsapp)} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-stone">
+                  WhatsApp
+                  <span className="block text-sm text-bone/70">{whatsappDisplay}</span>
                 </a>
               </li>
-            ))}
-          </ul>
+              {business.email && (
+                <li>
+                  <a href={`mailto:${business.email}`} className="break-all transition-colors hover:text-stone">
+                    {business.email}
+                  </a>
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
-      </div>
-      <div className="border-t border-cream/15">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-xs text-cream/80 sm:px-6">
-          © {business.founded} {business.name}. Made with love in Kingston.
-        </p>
+
+        <div className="mt-24 flex flex-col gap-2 border-t border-bone/15 pt-6 text-xs tracking-wide text-bone/70 sm:flex-row sm:justify-between">
+          <p>{business.name} · {business.city}</p>
+          <p>© {business.founded}</p>
+        </div>
       </div>
     </footer>
   );

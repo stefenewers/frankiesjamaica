@@ -10,13 +10,20 @@ export const siteUrl = (
 ).replace(/\/$/, "");
 
 export const siteDescription =
-  "FRANKIES is a Kingston, Jamaica lifestyle brand — greeting cards, custom cards for every occasion, and small-batch granola. Order on WhatsApp.";
+  "FRANKIES is a cards and gifting brand from Kingston, Jamaica — greeting cards, custom cards and small-batch granola. Order online and confirm on WhatsApp.";
 
 export const whatsappDisplay = "+1 (876) 886-8573";
 
 export const navLinks = [
   { href: "/shop", label: "Shop" },
-  { href: "/custom", label: "Custom cards" },
+  { href: "/custom", label: "Custom Studio" },
+  { href: "/about", label: "About" },
+] as const;
+
+export const footerLinks = [
+  { href: "/shop?category=cards", label: "Cards" },
+  { href: "/shop?category=granola", label: "Granola" },
+  { href: "/custom", label: "Custom Studio" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
 ] as const;

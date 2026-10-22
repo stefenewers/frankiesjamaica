@@ -7,7 +7,7 @@ import { jsonLd } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description: "How to order from FRANKIES — WhatsApp ordering, custom cards and more.",
+  description: "How to order from FRANKIES — ordering on WhatsApp, custom cards and more.",
   alternates: { canonical: "/faq" },
 };
 
@@ -26,43 +26,38 @@ const faqJsonLd = {
 
 export default function FaqPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <div className="page grid gap-14 pb-[var(--section-y)] pt-14 md:grid-cols-12 md:gap-8 md:pt-24">
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqJsonLd)} />
-      <header className="mb-10 space-y-2">
-        <p className="eyebrow">Good to know</p>
-        <h1 className="text-4xl sm:text-5xl">Questions &amp; answers</h1>
+      <header className="md:col-span-4">
+        <h1 className="display-l">Questions</h1>
+        <p className="meta mt-6 max-w-xs">Anything else, just ask — we reply on WhatsApp.</p>
+        <a
+          href={whatsappUrl(business.whatsapp, "Hi Frankies! I have a question.")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-outline mt-8"
+        >
+          <WhatsAppIcon className="size-4" /> Message us
+        </a>
       </header>
 
-      <div className="divide-y divide-sand border-y border-sand">
-        {answered.map((f) => (
-          <details key={f.q} className="group py-5">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-xl text-espresso [&::-webkit-details-marker]:hidden">
-              {f.q}
-              <span aria-hidden="true" className="text-2xl transition-transform group-open:rotate-45">
-                +
-              </span>
-            </summary>
-            <p className="mt-3 leading-relaxed">{f.a}</p>
-          </details>
-        ))}
-      </div>
-
-      <div className="mt-12 rounded-2xl bg-paper p-8 text-center">
-        <p className="font-serif text-2xl text-espresso">Still have a question?</p>
-        <p className="mt-2">We&apos;re happy to help — just send us a message.</p>
-        <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
-          <a
-            href={whatsappUrl(business.whatsapp, "Hi Frankies! I have a question.")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-whatsapp"
-          >
-            <WhatsAppIcon /> Message us on WhatsApp
-          </a>
-          <Link href="/custom" className="btn btn-outline">
-            Custom cards
-          </Link>
+      <div className="md:col-span-7 md:col-start-6">
+        <div className="rule-t">
+          {answered.map((f) => (
+            <details key={f.q} className="group rule-b">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 font-display text-xl transition-colors hover:text-brown md:text-2xl [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <span aria-hidden="true" className="text-xl transition-transform duration-300 group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <p className="max-w-xl pb-8 leading-relaxed">{f.a}</p>
+            </details>
+          ))}
         </div>
+        <p className="meta mt-10">
+          Looking for something made to order? <Link href="/custom" className="link text-ink">Visit the Custom Studio</Link>.
+        </p>
       </div>
     </div>
   );

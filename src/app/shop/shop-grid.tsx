@@ -12,28 +12,31 @@ function Grid({ category }: { category: string | null }) {
 
   return (
     <>
-      <nav aria-label="Filter by category" className="mb-8">
-        <ul className="flex flex-wrap gap-2">
-          {filters.map((f) => (
-            <li key={f.id ?? "all"}>
-              <Link
-                href={f.id ? `/shop?category=${f.id}` : "/shop"}
-                scroll={false}
-                aria-current={active === f.id ? "page" : undefined}
-                className="inline-flex min-h-11 items-center rounded-full border border-espresso px-5 text-sm text-espresso hover:bg-paper aria-[current=page]:bg-espresso aria-[current=page]:text-cream"
-              >
-                {f.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <p className="sr-only" aria-live="polite">
-        Showing {shown.length} products
-      </p>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-3 lg:gap-x-6">
+      <div className="mb-10 mt-14 flex items-end justify-between gap-6 rule-b md:mb-16 md:mt-20">
+        <nav aria-label="Filter by category">
+          <ul className="flex gap-8">
+            {filters.map((f) => (
+              <li key={f.id ?? "all"}>
+                <Link
+                  href={f.id ? `/shop?category=${f.id}` : "/shop"}
+                  scroll={false}
+                  aria-current={active === f.id ? "page" : undefined}
+                  className="kicker -mb-px block border-b border-transparent pb-4 text-ink-muted transition-colors hover:text-ink aria-[current=page]:border-ink aria-[current=page]:text-ink"
+                >
+                  {f.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <p className="meta pb-4" aria-live="polite">
+          {shown.length} {shown.length === 1 ? "piece" : "pieces"}
+        </p>
+      </div>
+      <h2 className="sr-only">{active ? categories.find((c) => c.id === active)?.name : "All products"}</h2>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20 lg:grid-cols-3">
         {shown.map((p, i) => (
-          <ProductCard key={p.slug} product={p} priority={i < 2} />
+          <ProductCard key={p.slug} product={p} priority={i < 2} showCategory={!active} />
         ))}
       </div>
     </>

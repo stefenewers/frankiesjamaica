@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useCart } from "./cart-provider";
 import { CloseIcon } from "./icons";
-import { ASK_FOR_PRICE, formatPrice } from "@/lib/catalog";
+import { PRICE_PENDING, formatPrice } from "@/lib/catalog";
 import { setQty } from "@/lib/cart-store";
 import { formatSubtotal, subtotal, type ResolvedLine } from "@/lib/order";
 
@@ -32,48 +32,40 @@ export function CartDrawer() {
       }}
     >
       <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between border-b border-sand px-5 py-4">
-          <h2 id="cart-title" className="text-2xl">
-            Your bag {count > 0 && <span className="text-base text-mocha">({count})</span>}
+        <div className="flex h-[var(--header-h)] items-center justify-between px-6 rule-b">
+          <h2 id="cart-title" className="kicker">
+            Your bag {count > 0 && <span className="text-ink-muted">({count})</span>}
           </h2>
-          <button
-            type="button"
-            onClick={close}
-            className="-mr-2 rounded-full p-2 hover:bg-paper"
-            aria-label="Close bag"
-          >
-            <CloseIcon className="size-6" />
+          <button type="button" onClick={close} className="icon-btn -mr-2.5" aria-label="Close bag">
+            <CloseIcon className="size-[22px]" />
           </button>
         </div>
 
         {resolved.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-            <p className="font-hand text-3xl text-espresso">Your bag is empty</p>
-            <p className="text-sm">Find something for every moment.</p>
-            <Link href="/shop" className="btn btn-primary" onClick={close}>
+          <div className="flex flex-1 flex-col items-start justify-center gap-6 px-6">
+            <p className="display-m">Your bag is empty.</p>
+            <Link href="/shop" className="link-arrow" onClick={close}>
               Browse the shop
             </Link>
           </div>
         ) : (
           <>
-            <ul className="flex-1 divide-y divide-sand overflow-y-auto px-5" aria-label="Items in your bag">
+            <ul className="flex-1 overflow-y-auto px-6" aria-label="Items in your bag">
               {resolved.map((line) => (
                 <CartItem key={`${line.product.slug}:${line.variant ?? ""}`} line={line} onNavigate={close} />
               ))}
             </ul>
-            <div className="space-y-3 border-t border-sand px-5 py-5">
+            <div className="space-y-5 px-6 pb-6 pt-5 rule-t">
               <div className="flex items-baseline justify-between gap-4">
-                <span className="text-sm">Subtotal</span>
-                <span className="text-right font-medium" data-testid="cart-subtotal">
+                <span className="kicker">Subtotal</span>
+                <span className="text-right" data-testid="cart-subtotal">
                   {formatSubtotal(subtotal(resolved))}
                 </span>
               </div>
-              <p className="text-xs text-mocha">
-                You&apos;ll confirm your order, delivery and payment with us on WhatsApp.
-              </p>
               <Link href="/checkout" className="btn btn-primary w-full" onClick={close}>
                 Checkout
               </Link>
+              <p className="meta text-center">Your order is confirmed with us on WhatsApp.</p>
             </div>
           </>
         )}
@@ -87,55 +79,51 @@ function CartItem({ line, onNavigate }: { line: ResolvedLine; onNavigate: () => 
   const label = `${product.name}${variant ? `, ${variant}` : ""}`;
 
   return (
-    <li className="flex gap-4 py-4">
+    <li className="flex gap-5 py-6 rule-b last:border-b-0">
       <Link
         href={`/shop/${product.slug}`}
         onClick={onNavigate}
-        className="relative size-20 shrink-0 overflow-hidden rounded-md bg-paper"
+        className="frame aspect-[4/5] w-20 shrink-0"
         tabIndex={-1}
         aria-hidden="true"
       >
         <Image src={product.images[0]} alt="" fill sizes="80px" className="object-cover" />
       </Link>
-      <div className="flex flex-1 flex-col gap-2">
+      <div className="flex flex-1 flex-col justify-between gap-3">
         <div className="flex justify-between gap-3">
           <div>
-            <Link href={`/shop/${product.slug}`} onClick={onNavigate} className="font-medium hover:underline">
+            <Link href={`/shop/${product.slug}`} onClick={onNavigate} className="title text-lg hover:text-brown">
               {product.name}
             </Link>
-            {variant && <p className="text-sm text-mocha">{variant}</p>}
+            {variant && <p className="meta">{variant}</p>}
           </div>
-          <p className="text-right text-sm whitespace-nowrap">
-            {lineTotal === null ? ASK_FOR_PRICE : formatPrice(lineTotal)}
+          <p className="meta whitespace-nowrap text-right">
+            {lineTotal === null ? PRICE_PENDING.short : formatPrice(lineTotal)}
           </p>
         </div>
         <div className="flex items-center justify-between">
-          <div className="flex items-center rounded-full border border-latte-dark">
+          <div className="flex items-center rounded-full border border-rule-strong">
             <button
               type="button"
-              className="grid size-9 place-items-center rounded-full text-lg hover:bg-paper"
+              className="grid size-9 place-items-center rounded-full hover:bg-stone"
               onClick={() => setQty(product.slug, variant, qty - 1)}
               aria-label={`Decrease quantity of ${label}`}
             >
               −
             </button>
-            <span className="w-7 text-center text-sm tabular-nums" aria-live="polite" aria-label={`Quantity ${qty}`}>
+            <span className="w-6 text-center text-sm tabular-nums" aria-live="polite" aria-label={`Quantity ${qty}`}>
               {qty}
             </span>
             <button
               type="button"
-              className="grid size-9 place-items-center rounded-full text-lg hover:bg-paper"
+              className="grid size-9 place-items-center rounded-full hover:bg-stone"
               onClick={() => setQty(product.slug, variant, qty + 1)}
               aria-label={`Increase quantity of ${label}`}
             >
               +
             </button>
           </div>
-          <button
-            type="button"
-            className="text-sm text-mocha underline underline-offset-4 hover:text-espresso"
-            onClick={() => setQty(product.slug, variant, 0)}
-          >
+          <button type="button" className="meta link" onClick={() => setQty(product.slug, variant, 0)}>
             Remove<span className="sr-only"> {label}</span>
           </button>
         </div>

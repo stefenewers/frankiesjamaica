@@ -2,7 +2,7 @@ import data from "../../content/products.json";
 
 export type Variant = {
   name: string;
-  /** Price in whole JMD. `null` means "Ask for price". */
+  /** Price in whole JMD. `null` shows "Enquire" / "Price confirmed on WhatsApp". */
   price: number | null;
 };
 
@@ -10,7 +10,7 @@ export type Product = {
   slug: string;
   name: string;
   category: string;
-  /** Price in whole JMD. `null` means "Ask for price". Ignored when variants have their own price. */
+  /** Price in whole JMD. `null` shows "Enquire" / "Price confirmed on WhatsApp". Ignored when variants have their own price. */
   price: number | null;
   variants: Variant[];
   images: string[];
@@ -66,4 +66,17 @@ export function formatPrice(amount: number): string {
   return `J$${jmd.format(amount)}`;
 }
 
-export const ASK_FOR_PRICE = "Ask for price";
+/** Customer-facing wording when a price is `null` in products.json. */
+export const PRICE_PENDING = {
+  /** Catalogue grids and the bag: one quiet word. */
+  short: "Enquire",
+  /** Product pages: explains what happens next. */
+  long: "Price confirmed on WhatsApp",
+} as const;
+
+/** "J$1,500", "From J$500", or the short enquiry label. */
+export function priceLabel(product: Product): string {
+  const price = startingPrice(product);
+  if (price === null) return PRICE_PENDING.short;
+  return `${product.variants.length > 1 ? "From " : ""}${formatPrice(price)}`;
+}

@@ -17,7 +17,7 @@ for (const p of data.products) {
   for (const img of p.images ?? []) {
     if (!existsSync(new URL(`../public${img}`, import.meta.url))) problems.push(`"${p.slug}": missing image ${img}`);
   }
-  if (p.price === null && !p.variants.some((v) => v.price !== null)) todos.push(`"${p.name}": no price yet (shows "Ask for price")`);
+  if (p.price === null && !p.variants.some((v) => v.price !== null)) todos.push(`"${p.name}": no price yet (shows "Enquire")`);
   if (!p.reviewed) todos.push(`"${p.name}": not reviewed by Kendall yet (set "reviewed": true)`);
 }
 for (const f of data.faq) if (!f.a) todos.push(`FAQ "${f.q}": no answer yet (hidden on the site)`);

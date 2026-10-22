@@ -45,7 +45,7 @@ If something is wrong with the file, Vercel won't publish it and the old version
 | `slug` | The web address: `/shop/coconut-granola`. Lowercase letters, numbers and dashes. Don't change it after launch. |
 | `name` | Product name shown on the site. |
 | `category` | `cards` or `granola` (or any `id` you add under `categories`). |
-| `price` | Price in **JMD**, numbers only — `1800` means J$1,800. Use `null` to show **"Ask for price"**; people can still add it to their bag and you'll quote them on WhatsApp. |
+| `price` | Price in **JMD**, numbers only — `1800` means J$1,800. Use `null` to show **"Enquire"** (and "Price confirmed on WhatsApp" on the product page); people can still add it to their bag and you'll quote them on WhatsApp. |
 | `variants` | Options like sizes or packs. Leave as `[]` for none. Example: `[{ "name": "Single", "price": 500 }, { "name": "Pack of 5", "price": 2000 }]` |
 | `images` | Photos from `public/images/`. The first one is the main photo. |
 | `description` | A sentence or two shown on the product page. |
@@ -96,7 +96,7 @@ npm test               # Playwright: cart → checkout → WhatsApp link (first 
 
 - Very long orders are shortened so the link stays under ~1,900 characters, the limit that opens reliably on iOS, Android and desktop.
 - `/thanks` offers an "Open WhatsApp again" button in case a pop-up blocker stopped it.
-- `/custom` sends a custom card request (occasion, quantity, date needed, message) the same way.
+- `/custom` (the Custom Studio) sends a custom card request (occasion, quantity, date needed, message) the same way.
 
 The message builder lives in [`src/lib/order.ts`](src/lib/order.ts).
 
@@ -134,6 +134,15 @@ Prices in the email are recomputed on the server from `products.json`.
 - [ ] Test checkout on iPhone, Android and desktop WhatsApp
 - [ ] Update the Linktree and Instagram bio links to the new site
 - [ ] Higher-resolution photos and a vector logo, if available (current images are ~736px from Pinterest)
+
+## Design system
+
+Tokens live at the top of [`src/app/globals.css`](src/app/globals.css):
+
+- **Colour:** `bone` (background), `ink` (text), `brown` (FRANKIES brown), `stone` (pale neutral). Muted text and hairline rules are mixed from these.
+- **Type:** Newsreader for display, Inter for text. Use the scale classes `display-xl`, `display-l`, `display-m`, `title`, `kicker`, `lede`, `meta`.
+- **Components:** `page` (width + gutter), `section` (vertical rhythm), `btn btn-primary|btn-inverse|btn-outline`, `link`, `link-arrow`, `label`, `field`, `frame` (image container), `rule-t`/`rule-b`.
+- **Logo:** `<Wordmark />` renders the wordmark cut from `logo.png`. See [`ASSET_NOTES.md`](ASSET_NOTES.md) for the images and vector logo still needed.
 
 ## Project map
 

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { AddToCart } from "@/components/add-to-cart";
+import { Gallery } from "@/components/gallery";
 import { ProductCard } from "@/components/product-card";
 import { business, getCategory, getProduct, products, startingPrice } from "@/lib/catalog";
 import { jsonLd, siteUrl } from "@/lib/site";
@@ -16,18 +17,43 @@ export async function generateMetadata({ params }: PageProps<"/shop/[slug]">): P
   if (!product) return {};
   return {
     title: product.name,
-    description: `${product.description} Order from FRANKIES in Kingston, Jamaica.`,
+    description: `${product.description} From FRANKIES, Kingston, Jamaica.`,
     alternates: { canonical: `/shop/${product.slug}` },
     openGraph: { images: [{ url: product.images[0] }] },
   };
 }
 
-export default async function ProductPage({ params }: PageProps<"/shop/[slug]">) {
+export default function ProductPage({ params }: PageProps<"/shop/[slug]">) {
+  // The slug is URL data: keep it inside Suspense so navigation shows the shell instantly.
+  return (
+    <Suspense fallback={<ProductSkeleton />}>
+      <Product params={params} />
+    </Suspense>
+  );
+}
+
+function ProductSkeleton() {
+  return (
+    <div className="page pb-[var(--section-y)] pt-6 md:pt-10" aria-busy="true">
+      <div className="mb-6 h-4 w-48 bg-stone md:mb-10" />
+      <div className="grid gap-10 md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] md:gap-12 lg:gap-24">
+        <div className="frame aspect-[4/5] md:ml-[calc(4.5rem+1.5rem)]" />
+        <div className="space-y-6 md:pt-2">
+          <div className="h-3 w-16 bg-stone" />
+          <div className="h-10 w-3/4 bg-stone" />
+          <div className="h-16 w-full bg-stone" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function Product({ params }: { params: PageProps<"/shop/[slug]">["params"] }) {
   const product = getProduct((await params).slug);
   if (!product) notFound();
 
   const category = getCategory(product.category);
-  const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 3);
+  const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
   const price = startingPrice(product);
 
   const productJsonLd = {
@@ -51,78 +77,70 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <>
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(productJsonLd)} />
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm">
-        <ol className="flex flex-wrap gap-2 text-mocha">
-          <li>
-            <Link href="/shop" className="hover:underline">
-              Shop
-            </Link>
-          </li>
-          {category && (
-            <li className="before:mr-2 before:content-['/']">
-              <Link href={`/shop?category=${category.id}`} className="hover:underline">
-                {category.name}
+      <div className="page pb-[var(--section-y)] pt-6 md:pt-10">
+        <nav aria-label="Breadcrumb" className="mb-6 md:mb-10">
+          <ol className="meta flex flex-wrap gap-2">
+            <li>
+              <Link href="/shop" className="hover:text-ink">
+                Shop
               </Link>
             </li>
-          )}
-          <li className="before:mr-2 before:content-['/']" aria-current="page">
-            {product.name}
-          </li>
-        </ol>
-      </nav>
+            {category && (
+              <li className="before:mr-2 before:content-['/']">
+                <Link href={`/shop?category=${category.id}`} className="hover:text-ink">
+                  {category.name}
+                </Link>
+              </li>
+            )}
+            <li className="text-ink before:mr-2 before:text-ink-muted before:content-['/']" aria-current="page">
+              {product.name}
+            </li>
+          </ol>
+        </nav>
 
-      <div className="grid gap-10 md:grid-cols-2 md:gap-14">
-        {/* Swipeable row on mobile so the buy button stays near the top; stacked on desktop. */}
-        <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 md:mx-0 md:block md:space-y-3 md:overflow-visible md:px-0">
-          {product.images.map((src, i) => (
-            <div
-              key={src}
-              className={`relative aspect-[4/5] shrink-0 snap-center overflow-hidden rounded-2xl bg-paper md:w-auto ${product.images.length > 1 ? "w-[82%]" : "w-full"}`}
-            >
-              <Image
-                src={src}
-                alt={i === 0 ? product.name : `${product.name}, photo ${i + 1}`}
-                fill
-                priority={i === 0}
-                sizes="(min-width: 768px) 34rem, 100vw"
-                className="object-cover"
-              />
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] md:gap-12 lg:gap-24">
+          <Gallery images={product.images} name={product.name} />
+
+          <div className="md:sticky md:top-[calc(var(--header-h)+2.5rem)] md:self-start md:pt-2">
+            {category && <p className="kicker text-ink-muted">{category.name}</p>}
+            <h1 className="display-m mt-4">{product.name}</h1>
+            <p className="lede mt-6 max-w-md">{product.description}</p>
+            <div className="mt-8">
+              <AddToCart product={product} />
             </div>
-          ))}
-        </div>
-
-        <div className="space-y-6 md:sticky md:top-24 md:self-start">
-          <div className="space-y-3">
-            {category && <p className="eyebrow">{category.name}</p>}
-            <h1 className="text-4xl sm:text-5xl">{product.name}</h1>
-            <p className="text-lg leading-relaxed">{product.description}</p>
+            {product.slug === "custom-cards" && (
+              <Link href="/custom" className="link-arrow mt-8">
+                Open the Custom Studio
+              </Link>
+            )}
+            <p className="meta mt-10 max-w-sm pt-6 rule-t">
+              Every order is confirmed personally on WhatsApp, where we arrange delivery or pickup and payment.
+            </p>
           </div>
-          <AddToCart product={product} />
-          <p className="border-t border-sand pt-5 text-sm text-mocha">
-            Orders are confirmed on WhatsApp — we&apos;ll sort out delivery or pickup and payment with you there.
-          </p>
-          {product.slug === "custom-cards" && (
-            <Link href="/custom" className="btn btn-outline">
-              Tell us about your custom card
-            </Link>
-          )}
         </div>
       </div>
 
       {related.length > 0 && (
-        <section aria-labelledby="related" className="mt-20">
-          <h2 id="related" className="mb-6 text-3xl">
-            You might also like
-          </h2>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3 lg:gap-x-6">
-            {related.map((p) => (
-              <ProductCard key={p.slug} product={p} />
-            ))}
+        <section aria-labelledby="related" className="rule-t">
+          <div className="page section">
+            <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
+              <h2 id="related" className="display-m">
+                More {category ? category.name.toLowerCase() : "from FRANKIES"}
+              </h2>
+              <Link href={category ? `/shop?category=${category.id}` : "/shop"} className="link-arrow hidden shrink-0 sm:inline-flex">
+                View all
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-8 lg:grid-cols-4">
+              {related.map((p) => (
+                <ProductCard key={p.slug} product={p} sizes="(min-width: 1024px) 22vw, 50vw" />
+              ))}
+            </div>
           </div>
         </section>
       )}
-    </div>
+    </>
   );
 }

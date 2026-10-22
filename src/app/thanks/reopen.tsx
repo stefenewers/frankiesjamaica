@@ -12,10 +12,10 @@ export function ReopenWhatsApp() {
 
   if (!url) return null;
   return (
-    <div className="rounded-xl bg-paper p-5">
-      <p className="mb-3 text-sm">WhatsApp didn&apos;t open?</p>
-      <a href={url} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
-        <WhatsAppIcon /> Open WhatsApp again
+    <div className="max-w-md py-6 rule-t rule-b">
+      <p className="meta mb-4">WhatsApp didn&apos;t open?</p>
+      <a href={url} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+        <WhatsAppIcon className="size-4" /> Open WhatsApp again
       </a>
     </div>
   );

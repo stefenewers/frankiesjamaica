@@ -5,6 +5,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "./cart-provider";
 import { BagIcon, CloseIcon, MenuIcon } from "./icons";
+import { Wordmark } from "./wordmark";
+import { business } from "@/lib/catalog";
+import { whatsappUrl } from "@/lib/order";
 import { navLinks } from "@/lib/site";
 
 export function Header() {
@@ -19,83 +22,105 @@ export function Header() {
   }
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const bagLabel = `Open bag, ${count} ${count === 1 ? "item" : "items"}`;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-sand/70 bg-cream/95 backdrop-blur">
+    <header className="sticky top-0 z-30 bg-bone/92 backdrop-blur-md rule-b">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-espresso focus:px-4 focus:py-2 focus:text-cream"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-bone"
       >
         Skip to content
       </a>
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="page grid h-[var(--header-h)] grid-cols-[1fr_auto_1fr] items-center">
+        {/* Left: desktop nav / mobile menu toggle */}
+        <nav aria-label="Main" className="hidden md:block">
+          <ul className="flex items-center gap-10">
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  aria-current={isActive(l.href) ? "page" : undefined}
+                  className="kicker relative py-2 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:text-brown hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <button
           type="button"
-          className="-ml-2 rounded-full p-2 md:hidden"
+          className="icon-btn -ml-2.5 md:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          {menuOpen ? <CloseIcon className="size-6" /> : <MenuIcon className="size-6" />}
+          {menuOpen ? <CloseIcon className="size-[22px]" /> : <MenuIcon className="size-[22px]" />}
         </button>
 
-        <Link href="/" className="wordmark text-xl text-espresso sm:text-2xl" aria-label="FRANKIES home">
-          Frankies
+        <Link href="/" aria-label="FRANKIES — home" className="justify-self-center">
+          <Wordmark priority className="h-[17px] w-auto md:h-[21px]" />
         </Link>
 
-        <nav aria-label="Main" className="hidden md:block">
-          <ul className="flex items-center gap-8 text-sm">
-            {navLinks.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  aria-current={isActive(l.href) ? "page" : undefined}
-                  className="underline-offset-8 hover:underline aria-[current=page]:text-espresso aria-[current=page]:underline"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <button
-          type="button"
-          onClick={open}
-          className="relative -mr-2 rounded-full p-2 text-espresso hover:bg-paper"
-          aria-label={`Open bag, ${count} ${count === 1 ? "item" : "items"}`}
-          data-testid="open-cart"
-        >
-          <BagIcon className="size-6" />
-          {count > 0 && (
-            <span
-              aria-hidden="true"
-              className="absolute -right-0.5 -top-0.5 grid min-w-5 place-items-center rounded-full bg-espresso px-1 text-[0.6875rem] font-semibold leading-5 text-cream"
-            >
-              {count}
+        {/* Right: bag */}
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={open}
+            aria-label={bagLabel}
+            data-testid="open-cart"
+            className="group -mr-2.5 flex items-center gap-2.5 p-2.5 transition-colors hover:text-brown"
+          >
+            <span className="kicker hidden md:inline" aria-hidden="true">
+              Bag
             </span>
-          )}
-        </button>
+            <span className="relative" aria-hidden="true">
+              <BagIcon className="size-[22px]" />
+              {count > 0 && (
+                <span className="absolute -right-2 -top-1.5 grid min-w-[18px] place-items-center rounded-full bg-brown px-1 text-[10px] font-semibold leading-[18px] text-bone tabular-nums">
+                  {count}
+                </span>
+              )}
+            </span>
+          </button>
+        </div>
       </div>
 
       {menuOpen && (
-        <nav id="mobile-nav" aria-label="Main" className="border-t border-sand md:hidden">
-          <ul className="mx-auto max-w-6xl px-4 py-2">
-            {navLinks.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  aria-current={isActive(l.href) ? "page" : undefined}
-                  className="block py-3 font-serif text-xl text-espresso"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div id="mobile-nav" className="rule-t md:hidden">
+          <nav aria-label="Main" className="page pb-10 pt-6">
+            <ul>
+              {navLinks.map((l) => (
+                <li key={l.href} className="rule-b">
+                  <Link
+                    href={l.href}
+                    aria-current={isActive(l.href) ? "page" : undefined}
+                    className="flex items-center justify-between py-4 font-display text-[2rem] leading-tight aria-[current=page]:text-brown"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {l.label}
+                    <span aria-hidden="true" className="text-base">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+              <Link href="/faq" className="link">
+                FAQ
+              </Link>
+              <a href={whatsappUrl(business.whatsapp)} target="_blank" rel="noopener noreferrer" className="link">
+                WhatsApp
+              </a>
+              <a href={business.instagram} target="_blank" rel="noopener noreferrer" className="link">
+                Instagram
+              </a>
+            </div>
+          </nav>
+        </div>
       )}
     </header>
   );

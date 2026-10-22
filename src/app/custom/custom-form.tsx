@@ -26,8 +26,8 @@ export function CustomForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl bg-paper p-6 sm:p-8" aria-label="Custom card request">
-      <div className="grid gap-5 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className="mt-12 space-y-10" aria-label="Custom card request">
+      <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
         <div>
           <label htmlFor="c-name" className="label">
             Name
@@ -52,7 +52,7 @@ export function CustomForm() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
         <div>
           <label htmlFor="c-occasion" className="label">
             Occasion
@@ -68,7 +68,7 @@ export function CustomForm() {
         </div>
         <div>
           <label htmlFor="c-qty" className="label">
-            How many cards?
+            Quantity
           </label>
           <input id="c-qty" name="quantity" type="number" min={1} max={1000} defaultValue={1} required className="field" />
         </div>
@@ -76,7 +76,7 @@ export function CustomForm() {
 
       <div>
         <label htmlFor="c-date" className="label">
-          Date needed <span className="font-normal text-mocha">(optional)</span>
+          Date needed <span className="label-hint">— optional</span>
         </label>
         <input id="c-date" name="date" type="date" className="field" />
       </div>
@@ -95,9 +95,11 @@ export function CustomForm() {
         />
       </div>
 
-      <button type="submit" className="btn btn-whatsapp w-full">
-        <WhatsAppIcon /> Send request on WhatsApp
-      </button>
+      <div className="pt-2">
+        <button type="submit" className="btn btn-primary w-full sm:w-auto">
+          <WhatsAppIcon className="size-4" /> Send request
+        </button>
+      </div>
     </form>
   );
 }

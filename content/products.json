@@ -17,13 +17,13 @@
     {
       "id": "cards",
       "name": "Cards",
-      "blurb": "Cards for birthdays, milestones and the quiet in-betweens — plus custom cards for every occasion.",
-      "image": "/images/cards-assorted.jpg"
+      "blurb": "Cards for birthdays, milestones, gratitude, faith and the days in between.",
+      "image": "/images/cards-floral.jpg"
     },
     {
       "id": "granola",
       "name": "Granola",
-      "blurb": "Small-batch granola to fill your cup.",
+      "blurb": "Small-batch granola for slower mornings.",
       "image": "/images/granola-jar.jpg"
     }
   ],
@@ -35,7 +35,33 @@
       "price": null,
       "variants": [],
       "images": ["/images/cards-birthday.jpg", "/images/cards-birthday-girl.jpg"],
-      "description": "Bright, joyful cards for the people worth celebrating.",
+      "description": "Bright, generous birthday cards for the people you'd celebrate any day of the year.",
+      "available": true,
+      "featured": true,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "everyday-cards",
+      "name": "Everyday Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-floral.jpg", "/images/cards-assorted.jpg"],
+      "description": "Cards for no particular reason — usually the best reason to send one.",
+      "available": true,
+      "featured": true,
+      "etsyUrl": null,
+      "reviewed": false
+    },
+    {
+      "slug": "faith-cards",
+      "name": "Faith Cards",
+      "category": "cards",
+      "price": null,
+      "variants": [],
+      "images": ["/images/cards-faith.jpg", "/images/cards-faith-seasons.jpg"],
+      "description": "Words of faith and encouragement, for every season.",
       "available": true,
       "featured": true,
       "etsyUrl": null,
@@ -48,9 +74,9 @@
       "price": null,
       "variants": [],
       "images": ["/images/cards-graduation.jpg"],
-      "description": "Hats off to the grad — cards for a milestone worth marking.",
+      "description": "For the graduate — a card to mark a day they'll remember.",
       "available": true,
-      "featured": false,
+      "featured": true,
       "etsyUrl": null,
       "reviewed": false
     },
@@ -61,7 +87,7 @@
       "price": null,
       "variants": [],
       "images": ["/images/cards-fathers-day.jpg"],
-      "description": "For the dads, granddads and father figures who show up.",
+      "description": "For dads, granddads and the father figures who always show up.",
       "available": true,
       "featured": false,
       "etsyUrl": null,
@@ -74,22 +100,9 @@
       "price": null,
       "variants": [],
       "images": ["/images/cards-teachers.jpg"],
-      "description": "A thank-you for the teachers who make the magic happen.",
+      "description": "A proper thank-you for the teachers who made the difference.",
       "available": true,
       "featured": false,
-      "etsyUrl": null,
-      "reviewed": false
-    },
-    {
-      "slug": "faith-cards",
-      "name": "Faith Cards",
-      "category": "cards",
-      "price": null,
-      "variants": [],
-      "images": ["/images/cards-faith.jpg", "/images/cards-faith-seasons.jpg"],
-      "description": "Words of encouragement for every season.",
-      "available": true,
-      "featured": true,
       "etsyUrl": null,
       "reviewed": false
     },
@@ -100,20 +113,7 @@
       "price": null,
       "variants": [],
       "images": ["/images/cards-valentines.jpg", "/images/envelope-open-this.jpg"],
-      "description": "Celebrate your favourite person with a FRANKIES card.",
-      "available": true,
-      "featured": false,
-      "etsyUrl": null,
-      "reviewed": false
-    },
-    {
-      "slug": "everyday-cards",
-      "name": "Everyday Cards",
-      "category": "cards",
-      "price": null,
-      "variants": [],
-      "images": ["/images/cards-floral.jpg", "/images/cards-assorted.jpg"],
-      "description": "Simple, considered cards for no reason at all.",
+      "description": "For your favourite person. Sealed, sent and kept.",
       "available": true,
       "featured": false,
       "etsyUrl": null,
@@ -125,10 +125,10 @@
       "category": "cards",
       "price": null,
       "variants": [],
-      "images": ["/images/cards-custom.jpg", "/images/brand-gift-box.jpg"],
-      "description": "Custom cards for every occasion — for personal moments, professional events, and everything in between.",
+      "images": ["/images/brand-gift-box.jpg", "/images/cards-custom.jpg"],
+      "description": "Cards made around your occasion — personal celebrations, events, businesses and gifts. Tell us what you need in the Custom Studio.",
       "available": true,
-      "featured": true,
+      "featured": false,
       "etsyUrl": null,
       "reviewed": false
     },
@@ -138,10 +138,10 @@
       "category": "granola",
       "price": null,
       "variants": [],
-      "images": ["/images/granola-jar.jpg", "/images/granola-coconut.jpg", "/images/granola-coconut-bowl.jpg"],
-      "description": "Golden, toasty granola with coconut.",
+      "images": ["/images/granola-coconut.jpg", "/images/granola-coconut-bowl.jpg", "/images/granola-cup.jpg"],
+      "description": "Golden, crunchy granola with toasted coconut.",
       "available": true,
-      "featured": true,
+      "featured": false,
       "etsyUrl": null,
       "reviewed": false
     },
@@ -152,7 +152,7 @@
       "price": null,
       "variants": [],
       "images": ["/images/granola-chocolate.jpg"],
-      "description": "Rich chocolate granola for a sweeter morning.",
+      "description": "Dark, rich chocolate granola for a slower start.",
       "available": true,
       "featured": false,
       "etsyUrl": null,
@@ -171,16 +171,17 @@
     "Teacher appreciation",
     "Faith",
     "Business / professional event",
+    "Gifting",
     "Other"
   ],
   "faq": [
     {
       "q": "How do I order?",
-      "a": "Add what you'd like to your bag and check out — we'll open WhatsApp with your order already written out, so all you need to do is press send. You can also message us on WhatsApp any time, or shop on Etsy."
+      "a": "Add what you'd like to your bag and check out. Your order opens in WhatsApp, already written out — press send and we'll confirm the details with you there. You can also message us directly, or shop on Etsy."
     },
     {
       "q": "Can I get a custom card?",
-      "a": "Yes! We make custom cards for every occasion — for personal moments, professional events, and everything in between. Tell us what you have in mind on the custom cards page."
+      "a": "Yes. We make cards for personal celebrations, events, businesses and gifts. Tell us about it in the Custom Studio."
     },
     {
       "q": "Do you deliver, or can I pick up?",

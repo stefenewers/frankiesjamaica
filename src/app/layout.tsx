@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Caudex, Caveat, Inter } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { CartDrawer } from "@/components/cart-drawer";
 import { CartProvider } from "@/components/cart-provider";
@@ -10,14 +10,17 @@ import { business } from "@/lib/catalog";
 import { jsonLd, siteDescription, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-const caudex = Caudex({ variable: "--font-caudex", weight: ["400", "700"], subsets: ["latin"] });
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  axes: ["opsz"],
+});
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const caveat = Caveat({ variable: "--font-caveat", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${business.name} — ${business.tagline} | Cards & granola in Kingston, Jamaica`,
+    default: `${business.name} — Cards & gifts from Kingston, Jamaica`,
     template: `%s | ${business.name}`,
   },
   description: siteDescription,
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5ebde",
+  themeColor: "#f6f1e9",
 };
 
 const storeJsonLd = {
@@ -48,7 +51,7 @@ const storeJsonLd = {
   "@type": "Store",
   name: business.name,
   slogan: business.tagline,
-  description: business.statement,
+  description: siteDescription,
   url: siteUrl,
   logo: `${siteUrl}/images/logo.png`,
   image: `${siteUrl}/images/brand-stone-sign.jpg`,
@@ -68,7 +71,7 @@ const storeJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${caudex.variable} ${inter.variable} ${caveat.variable} antialiased`}>
+    <html lang="en" className={`${newsreader.variable} ${inter.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col font-sans">
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(storeJsonLd)} />
         <CartProvider>
