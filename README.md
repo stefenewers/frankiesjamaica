@@ -29,7 +29,7 @@ Push to `main`; Vercel serves the files directly. If the Vercel project still ha
 
 - **Envelope intro** plays on every load so it's always seen. To show it once per visit, have `showIntro()` check `sessionStorage['frankies-intro']`, which `endIntro()` already sets. Skip it with "Skip intro" or Escape. With reduced motion turned on, it's skipped automatically.
 - **Catalogue**: `DESIGNS`, `MOODS` (occasions, colours, headlines, starter lines) and `ALL` in the `<script>` at the bottom of `index.html`. Add a design by dropping a 700×980 image in `img/cards/` and adding its id to `DESIGNS` and to an occasion's `designs`.
-- **Ordering**: the bag lives in `localStorage`. "Send order on WhatsApp" shows the exact message that would go to FRANKIES (+1 876-886-8573). Nothing is sent from the page yet; wiring it to `https://wa.me/18768868573?text=…` is the next step.
+- **Ordering**: the bag lives in `localStorage`. "Send order on WhatsApp" shows the exact order message, and **Open WhatsApp** opens `https://wa.me/18768868573?text=…` with it ready to send to FRANKIES (+1 876-886-8573). Nothing is sent until the customer presses send in WhatsApp; prices and delivery are confirmed there.
 - **Motion** uses hand-written springs (one shared `requestAnimationFrame` loop that sleeps when idle), CSS 3D transforms and the Web Animations API. All of it respects `prefers-reduced-motion`.
 
 ## Before launch (needs Kendall)

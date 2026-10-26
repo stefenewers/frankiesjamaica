@@ -471,6 +471,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 .modal h2 { margin: 0 0 6px; font: 700 26px var(--font-display); letter-spacing: -.02em; }
 .wa-bubble { margin: 18px 0; background: #DCF8C6; color: #111; border-radius: 14px 14px 4px 14px; padding: 14px 16px; font: 14px/1.5 var(--font-ui); white-space: pre-wrap; box-shadow: 0 1px 1px rgba(0,0,0,.08); }
 .modal .note { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+.modal .modal-close { display: block; margin: 10px auto 0; color: var(--muted); }
 .toast { position: fixed; z-index: 85; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); transform: translate(-50%, calc(100% + 48px)); opacity: 0; visibility: hidden; background: var(--espresso); color: var(--paper); padding: 12px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: transform .75s var(--ease-out), opacity .5s, visibility 0s linear .75s; }
 .toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; transition: transform .75s var(--ease-out), opacity .5s, visibility 0s; }
 @media (max-width: 960px) {
@@ -876,7 +877,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
       <a href="https://www.instagram.com/frankiesjamaica" target="_blank" rel="noopener">@frankiesjamaica</a>
       <span>www.frankiesjamaica.com</span>
     </address>
-    <p class="foot-note">Interactive prototype. Card fronts are cropped from FRANKIES' own photography and are provisional until the catalogue is confirmed. Prices, availability and personalisation options are confirmed on WhatsApp. Nothing is sent from this page.</p>
+    <p class="foot-note">Card fronts are cropped from FRANKIES' own photography and are provisional until the catalogue is confirmed. Prices, availability and personalisation options are confirmed on WhatsApp.</p>
   </div>
 </footer>
 
@@ -907,12 +908,13 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 </aside>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
   <h2 id="modalTitle">Your WhatsApp order</h2>
-  <p class="note">On the live site this opens WhatsApp to FRANKIES (+1 876-886-8573) with this message ready to send. This prototype doesn't send anything.</p>
+  <p class="note">This opens WhatsApp to FRANKIES (<span style="white-space: nowrap">+1 876-886-8573</span>) with your order ready to send. Prices and delivery are confirmed there.</p>
   <div class="wa-bubble" id="waText"></div>
   <div class="buy-row">
-    <button class="btn btn-ink" type="button" id="copyMsg">Copy message</button>
-    <button class="btn btn-ghost" style="--mood-fg: var(--espresso)" type="button" id="modalClose">Close</button>
+    <a class="btn btn-ink" id="waOpen" href="https://wa.me/18768868573" target="_blank" rel="noopener">Open WhatsApp</a>
+    <button class="btn btn-ghost" style="--mood-fg: var(--espresso)" type="button" id="copyMsg">Copy message</button>
   </div>
+  <button class="link-btn modal-close" type="button" id="modalClose">Close</button>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -1674,14 +1676,24 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   $('#bagClose').addEventListener('click', closeDrawer);
   scrim.addEventListener('click', () => { if (document.body.classList.contains('dock-open')) closeDockSheet(); else if (modal.classList.contains('open')) closeModal(); else closeDrawer(); });
 
+  const WA_NUMBER = '18768868573'; // FRANKIES WhatsApp, +1 876-886-8573
   function composeMessage(items) {
-    return `Hi Frankies! New order 🛍️\nName: [your name]  Phone: [your number]\nItems:\n${items.map(orderLine).join('\n')}\nSubtotal: To be confirmed\nDelivery/Pickup: [chosen at checkout]`;
+    const name = from.value.trim();
+    return [
+      'Hi Frankies! New order 🛍️',
+      name ? `Name: ${name}` : null,
+      'Items:',
+      ...items.map(orderLine),
+      'Subtotal: To be confirmed',
+      'I’ll confirm delivery/pickup and payment here.'
+    ].filter(Boolean).join('\n');
   }
   function openModal(items) {
     lastFocus = document.activeElement;
     $('#waText').textContent = composeMessage(items);
+    $('#waOpen').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent($('#waText').textContent)}`;
     scrim.hidden = false; requestAnimationFrame(() => scrim.classList.add('show'));
-    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); updateDock(); $('#copyMsg').focus();
+    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); updateDock(); $('#waOpen').focus();
   }
   function closeModal() {
     modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); updateDock();
@@ -1843,7 +1855,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   onMessage(false);
   requestAnimationFrame(() => { placeIndicator(true); onScroll(); });
   if (document.fonts) document.fonts.ready.then(() => placeIndicator(true));
-  // The prototype shows the envelope on every load so reviewers always see it;
+  // The envelope shows on every load so it's always seen;
   // production would show it once per session (sessionStorage 'frankies-intro').
   showIntro();
 })();
