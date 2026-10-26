@@ -473,7 +473,12 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 .modal .note { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
 .toast { position: fixed; z-index: 85; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); transform: translate(-50%, calc(100% + 48px)); opacity: 0; visibility: hidden; background: var(--espresso); color: var(--paper); padding: 12px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: transform .75s var(--ease-out), opacity .5s, visibility 0s linear .75s; }
 .toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; transition: transform .75s var(--ease-out), opacity .5s, visibility 0s; }
-@media (max-width: 960px) { .toast { bottom: max(84px, calc(env(safe-area-inset-bottom, 0px) + 74px)); } }
+@media (max-width: 960px) {
+  .toast { bottom: max(84px, calc(env(safe-area-inset-bottom, 0px) + 74px)); left: 16px; right: 16px; width: max-content; max-width: calc(100vw - 32px); margin-inline: auto; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transform: translateY(calc(100% + 120px)); }
+  .toast.show { transform: none; }
+  /* When the sticky Add-to-bag bar is up, confirm in place over the bar so nothing else is covered. */
+  .toast.on-bar { bottom: max(10px, env(safe-area-inset-bottom, 0px)); width: auto; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+}
 
 /* Tuck-into-envelope (add to bag) */
 .tuck-env { position: fixed; z-index: 89; width: 120px; height: 86px; border-radius: 3px; background: #c79f73 url(img/envelope.jpg) center 80% / 180% auto; box-shadow: 0 14px 28px -8px rgba(0,0,0,.45); pointer-events: none; overflow: visible; }
@@ -1534,7 +1539,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   /* ── Bag ── */
   const drawer = $('#drawer'), scrim = $('#scrim'), modal = $('#modal');
   let lastFocus = null;
-  function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 2200); }
+  function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.toggle('on-bar', compact.matches && $('#mbar').classList.contains('show')); el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 2200); }
   function renderBag(bump) {
     const n = state.bag.reduce((s, i) => s + i.qty, 0);
     $('#bagCount').firstElementChild.textContent = String(n);
@@ -1603,16 +1608,36 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     ], { duration: 1100, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' }).finished;
     env.remove();
   }
+  // One add at a time: feedback is immediate, a second tap while adding is ignored (no duplicates),
+  // and the tuck animation only plays where it can be seen.
+  let adding = false;
   async function addToBag() {
-    const item = draftItem();
-    const wasOpen = viewerCard.isOpen;
-    if (wasOpen) { viewerCard.setOpen(false); if (!reduce) await wait(850); }
-    state.bag.push(item); saveBag();
-    const ab = $('#addBtn');
-    clearTimeout(ab._t); ab.textContent = 'Added to your bag ✓';
-    ab._t = setTimeout(() => { ab.textContent = studioMood().id === 'custom' ? 'Add brief to bag' : 'Add to bag'; }, 2600);
-    if (reduce) { renderBag(true); toast(`Added ${item.mood === 'custom' ? 'custom brief' : `${item.qty} × ${item.coll}`}`); return; }
-    tuckIntoBag(item.designId).then(() => { renderBag(true); toast(`Added ${item.mood === 'custom' ? 'custom brief' : `${item.qty} × ${item.coll}`}`); });
+    if (adding) return;
+    adding = true;
+    const buttons = [$('#addBtn'), $('#mbarAdd')];
+    const label = studioMood().id === 'custom' ? 'Add brief to bag' : 'Add to bag';
+    buttons.forEach((b) => { clearTimeout(b._t); b.textContent = 'Adding…'; b.disabled = true; });
+    try {
+      const item = draftItem();
+      state.bag.push(item); saveBag();
+      renderBag(true);
+      toast(`Added ${item.mood === 'custom' ? 'custom brief' : `${item.qty} × ${item.coll}`}`);
+      const r = viewerCard.root.querySelector('.face.front').getBoundingClientRect();
+      const cardOnScreen = r.bottom > 0 && r.top < innerHeight;
+      if (reduce || (compact.matches && !cardOnScreen)) {
+        if (viewerCard.isOpen) viewerCard.setOpen(false);
+        if (!reduce) await wait(400); // long enough to read “Adding…”
+      } else {
+        if (viewerCard.isOpen) { viewerCard.setOpen(false); if (!compact.matches) await wait(850); }
+        await tuckIntoBag(item.designId);
+      }
+    } finally {
+      buttons.forEach((b) => {
+        b.textContent = 'Added ✓'; b.disabled = false;
+        b._t = setTimeout(() => { b.textContent = label; }, 1800);
+      });
+      adding = false;
+    }
   }
   $('#studioForm').addEventListener('submit', (e) => { e.preventDefault(); addToBag(); });
   $('#mbarAdd').addEventListener('click', addToBag);
