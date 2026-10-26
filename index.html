@@ -59,7 +59,7 @@
 html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 @media (max-width: 860px) { html { scroll-padding-top: 70px; } }
 input, textarea, select { scroll-margin-top: 96px; }
-@media (max-width: 960px) { #msg, #from { scroll-margin-top: 172px; } }
+@media (max-width: 960px) { #msg, #from { scroll-margin-top: calc(62px + env(safe-area-inset-top, 0px) + var(--dock-h, 96px) + 16px); } }
 body { margin: 0; background: var(--cream); color: var(--espresso); font: 16px/1.5 var(--font-ui); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--mood-bg); }
 img { max-width: 100%; display: block; }
@@ -481,20 +481,37 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 .tuck-flap { position: absolute; left: 0; right: 0; top: 0; height: 62%; transform-origin: top; background: #b88d62 url(img/envelope.jpg) center 20% / 180% auto; clip-path: polygon(0 0, 100% 0, 50% 100%); }
 .tuck-seal { position: absolute; left: 50%; top: 52%; width: 26px; height: 26px; margin: -13px; border-radius: 50%; background: var(--seal); box-shadow: 0 2px 4px rgba(0,0,0,.3); }
 
-/* Mobile live card preview while writing (phones & tablets only) */
-.mini-preview { position: fixed; z-index: 45; left: var(--gutter); right: var(--gutter-r); top: calc(62px + env(safe-area-inset-top, 0px) + 8px); display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 10px; border-radius: 16px; background: color-mix(in srgb, var(--paper) 96%, transparent); backdrop-filter: blur(10px); box-shadow: 0 1px 2px rgba(44,32,27,.08), 0 14px 30px -14px rgba(44,32,27,.4); will-change: transform; }
-.mini-card { flex: 1; min-width: 0; display: flex; gap: 10px; align-items: stretch; }
-.mini-card img { width: 50px; height: 70px; object-fit: cover; border-radius: 3px; flex: none; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
-.mini-inside { flex: 1; min-width: 0; border-radius: 3px; background: #FFFDF8 var(--paper-noise); padding: 8px 10px; box-shadow: inset 6px 0 8px -6px rgba(44,32,27,.18); display: flex; flex-direction: column; justify-content: center; }
-.mini-note { margin: 0; font-family: var(--font-note); font-style: italic; font-size: 15px; line-height: 1.3; color: #2a211b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+/* Mobile preview dock: the card you're writing, pinned under the header while the studio form
+   is on screen (phones & tablets only). Tap it for the full card in a bottom sheet. */
+.mini-preview { position: fixed; z-index: 45; left: var(--gutter); right: var(--gutter-r); top: calc(62px + env(safe-area-inset-top, 0px) + 8px); display: flex; align-items: center; gap: 8px; max-height: 120px; padding: 6px; border-radius: 16px; background: var(--cream); --dock-shadow: 0 1px 2px rgba(44,32,27,.08), 0 14px 30px -14px rgba(44,32,27,.4), 0 8px 0 16px var(--paper); /* last shadow fills exactly the 8px gap under the header */ box-shadow: var(--dock-shadow); will-change: transform; }
+.mini-preview.flash { animation: dockflash .3s var(--ease-out); }
+@keyframes dockflash { 40% { box-shadow: 0 0 0 3px rgba(109,54,20,.45), var(--dock-shadow); } }
+.mini-card { flex: 1; min-width: 0; display: flex; gap: 8px; align-items: stretch; border: 0; padding: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: 10px; }
+.mini-thumb { position: relative; flex: none; align-self: center; }
+.mini-thumb img { width: 40px; height: 56px; object-fit: cover; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+.mini-qty { position: absolute; right: -8px; bottom: -6px; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 12px; background: var(--espresso); color: var(--paper); font: 700 14px/24px var(--font-ui); text-align: center; }
+.mini-qty:empty { display: none; }
+.mini-inside { flex: 1; min-width: 0; display: flex; align-items: center; border-radius: 3px; background: #FFFDF8 var(--paper-noise); padding: 6px 10px; box-shadow: inset 6px 0 8px -6px rgba(44,32,27,.18); }
+.mini-note { display: block; margin: 0; font-family: var(--font-note); font-style: italic; font-size: 14px; line-height: 1.3; color: #2a211b; max-height: calc(14px * 1.3 * 5); overflow: hidden; overflow-wrap: anywhere; }
+.mini-note.long { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.3em), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 1.3em), transparent); }
 .mini-note.placeholder { color: rgba(42,33,27,.4); }
-.mini-sig { margin: 2px 0 0; font-family: var(--font-note); font-style: italic; font-size: 13px; text-align: right; color: #2a211b; }
-.mini-sig:empty { display: none; }
-.mini-toggle { flex: none; align-self: center; min-height: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; font: 600 13px var(--font-ui); color: var(--muted); cursor: pointer; }
-.mini-preview.collapsed .mini-card { display: none; }
-.mini-preview.collapsed { left: auto; padding: 0; }
-.mini-preview.collapsed .mini-toggle { background: var(--espresso); color: var(--paper); }
+.mini-sig { white-space: nowrap; }
+.mini-actions { flex: none; display: grid; gap: 4px; }
+.mini-btn { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--espresso) 8%, transparent); color: var(--espresso); cursor: pointer; }
 @media (min-width: 961px) { .mini-preview { display: none !important; } }
+
+/* Full card as a bottom sheet (reuses the studio viewer) */
+.viewer-close, .viewer-handle { display: none; }
+@media (max-width: 960px) {
+  textarea.msg { min-height: 120px; }
+  .viewer-label { left: 0; right: 0; text-align: center; }
+  body.dock-open .viewer { position: fixed; inset: auto 0 0 0; z-index: 74; height: min(85svh, 600px); max-height: 85svh; min-height: 0; border-radius: 24px 24px 0 0; padding: 56px 16px calc(84px + env(safe-area-inset-bottom, 0px)); touch-action: none; box-shadow: 0 -20px 50px rgba(0,0,0,.2); animation: sheetup .45s var(--ease-out); }
+  body.dock-open .viewer .card { --w: min(58vw, 260px, calc((min(85svh, 600px) - 170px) * .714)); }
+  body.dock-open .viewer-handle { display: block; position: absolute; top: 10px; left: 50%; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: rgba(44,32,27,.25); }
+  body.dock-open .viewer-close { display: inline-grid; position: absolute; top: 8px; right: 10px; z-index: 6; }
+  body.dock-open .viewer-label { top: 24px; }
+  @keyframes sheetup { from { transform: translateY(100%); } }
+}
 
 /* Mobile sticky buy bar inside studio */
 .mbar { display: none; }
@@ -631,6 +648,8 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
       <div class="studio-grid">
         <div class="viewer" id="viewer">
           <span class="viewer-label" id="viewerLabel">Move your cursor over the card</span>
+          <span class="viewer-handle" aria-hidden="true"></span>
+          <button class="icon-btn viewer-close" type="button" id="sheetClose" aria-label="Close card preview"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
           <div id="viewerCard"></div>
           <div class="viewer-tools" role="group" aria-label="Card view">
             <button class="seg" type="button" id="viewFront" aria-pressed="true">Front</button>
@@ -656,7 +675,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
             <div class="msg-head">
               <label class="field-label" for="msg" style="flex:1"><span><span class="step" aria-hidden="true">2</span><span id="msgLabel">Write your message</span></span> <small id="msgCount">0 / 180</small></label>
             </div>
-            <textarea class="msg" id="msg" maxlength="180" placeholder="Write what you’d like inside the card"></textarea>
+            <textarea class="msg" id="msg" maxlength="180" rows="5" enterkeyhint="done" autocapitalize="sentences" placeholder="Write what you’d like inside the card"></textarea>
             <div class="msg-head">
               <button class="link-btn" type="button" id="rubOut" disabled>Rub out and start again</button>
             </div>
@@ -682,7 +701,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
           <div class="row2">
             <div class="field-group">
               <label class="field-label" for="from"><span><span class="step" aria-hidden="true">3</span>Sign it from</span></label>
-              <input class="txt" id="from" maxlength="40" placeholder="Your name" autocomplete="name">
+              <input class="txt" id="from" maxlength="40" placeholder="Your name" autocomplete="name" enterkeyhint="done" autocapitalize="words">
             </div>
             <div class="field-group">
               <span class="field-label" id="qtyLabel">Quantity</span>
@@ -857,11 +876,14 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 </footer>
 
 <div class="mini-preview" id="miniPreview" hidden>
-  <div class="mini-card" aria-hidden="true">
-    <img id="miniFront" src="img/cards/thinking-of-you.jpg" alt="">
-    <div class="mini-inside"><p class="mini-note placeholder" id="miniNote">Your message appears here.</p><p class="mini-sig" id="miniSig"></p></div>
+  <button type="button" class="mini-card" id="miniCard" aria-label="Show full card preview">
+    <span class="mini-thumb"><img id="miniFront" src="img/cards/thinking-of-you.jpg" alt="" width="40" height="56"><span class="mini-qty" id="miniQty"></span></span>
+    <span class="mini-inside"><span class="mini-note placeholder" id="miniNote">Your message appears here.</span></span>
+  </button>
+  <div class="mini-actions">
+    <button type="button" class="mini-btn" id="miniExpand" aria-label="Show full card"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 9V4h5M20 15v5h-5M4 4l6 6M20 20l-6-6"/></svg></button>
+    <button type="button" class="mini-btn" id="miniFlip" aria-label="Flip card to inside"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg></button>
   </div>
-  <button type="button" class="mini-toggle" id="miniToggle" aria-expanded="true" aria-controls="miniPreview">Hide preview</button>
 </div>
 
 <div class="mbar" id="mbar" aria-hidden="true">
@@ -1278,6 +1300,8 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     msg.placeholder = m.id === 'custom' ? 'The occasion, wording, style, how many and when' : 'Write what you’d like inside the card';
     if (m !== lastStudioMood) { lastStudioMood = m; state.padIdx = 0; renderPad(animate); }
     renderOrderLine();
+    syncMini();
+    if (animate) flashMini();
   }
   function orderLine(item) {
     if (item.mood === 'custom') return `- Custom card brief — ${item.qty} card${item.qty > 1 ? 's' : ''}\n  Idea: ${item.message ? `“${item.message}”` : '(to discuss)'}`;
@@ -1308,48 +1332,100 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     viewerCard.setMessage(text, from.value.trim(), writeIt.checked, animated);
     deckCard.setMessage(text, from.value.trim(), writeIt.checked, false);
     renderOrderLine();
+    syncMini();
   }
   msg.addEventListener('input', () => onMessage(false));
-  /* ── Mobile live preview: while the message or name field is focused, pin a compact card preview
-     under the header so you can see your words without scrolling. Desktop never shows it. ── */
-  const mini = $('#miniPreview'), miniToggle = $('#miniToggle'), compact = matchMedia('(max-width: 960px)');
-  let miniBlurT = 0, miniCollapsed = false;
+  /* ── Mobile preview dock: on phones and tablets, while the studio form is on screen, a compact card
+     preview stays pinned under the header so you always see the card you're writing. Tap it for the
+     full card in a bottom sheet. Desktop never shows it. ── */
+  const mini = $('#miniPreview'), miniCard = $('#miniCard'), compact = matchMedia('(max-width: 960px)');
+  let formOnScreen = false, dockFlashT = 0;
   function syncMini() {
-    const text = msg.value.trim();
-    $('#miniNote').textContent = text || 'Your message appears here.';
-    $('#miniNote').classList.toggle('placeholder', !text);
-    $('#miniSig').textContent = from.value.trim() ? `— ${from.value.trim()}` : '';
+    const text = msg.value.trim(), name = from.value.trim(), note = $('#miniNote');
+    note.textContent = text || 'Your message appears here.';
+    note.classList.toggle('placeholder', !text);
+    if (name) { const sig = document.createElement('span'); sig.className = 'mini-sig'; sig.textContent = ` — ${name}`; note.appendChild(sig); }
+    note.classList.toggle('long', note.scrollHeight > note.clientHeight + 1);
     $('#miniFront').src = img(state.designId);
+    $('#miniQty').textContent = state.qty > 1 ? `×${state.qty}` : '';
+    $('#miniFlip').setAttribute('aria-label', viewerCard.isOpen ? 'Flip card to front' : 'Flip card to inside');
+  }
+  function flashMini() {
+    if (reduce || mini.hidden) return;
+    mini.classList.remove('flash'); void mini.offsetWidth; mini.classList.add('flash');
+    clearTimeout(dockFlashT); dockFlashT = setTimeout(() => mini.classList.remove('flash'), 320);
   }
   function placeMini() {
-    // iOS keeps fixed elements on the layout viewport; follow the visual viewport so the strip stays visible.
+    // iOS keeps fixed elements on the layout viewport; follow the visual viewport so the dock stays below the header.
     const vv = window.visualViewport;
     mini.style.transform = vv ? `translateY(${Math.max(0, vv.offsetTop)}px)` : '';
   }
-  function showMini(on) {
-    if (!compact.matches) { mini.hidden = true; return; }
-    mini.hidden = !on;
-    document.getElementById('mbar').style.visibility = on ? 'hidden' : '';
-    if (on) { syncMini(); placeMini(); }
+  function updateDock() {
+    const blocked = document.body.classList.contains('dock-open') || $('#drawer').classList.contains('open') || $('#modal').classList.contains('open') || !$('#mnav').hidden;
+    const show = compact.matches && formOnScreen && !blocked;
+    if (mini.hidden !== show) return;
+    mini.hidden = !show;
+    if (show) { syncMini(); placeMini(); document.documentElement.style.setProperty('--dock-h', `${mini.offsetHeight}px`); }
   }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((es) => { formOnScreen = es[es.length - 1].isIntersecting; updateDock(); }, { threshold: 0.05, rootMargin: '-62px 0px -80px 0px' }).observe($('#studioForm'));
+  }
+  compact.addEventListener('change', updateDock);
+  // While typing, the sticky Add-to-bag bar steps aside for the keyboard.
+  const typing = () => document.activeElement === msg || document.activeElement === from;
   [msg, from].forEach((el) => {
     el.addEventListener('focus', () => {
-      clearTimeout(miniBlurT);
-      showMini(true);
-      // once the keyboard has opened, sit the field just below the preview strip
+      if (compact.matches) $('#mbar').style.visibility = 'hidden';
+      // once the keyboard has opened, sit the field just below the header and dock
       setTimeout(() => { if (document.activeElement === el && compact.matches) el.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' }); }, 320);
     });
-    el.addEventListener('blur', () => { miniBlurT = setTimeout(() => { if (!mini.contains(document.activeElement)) showMini(false); }, 180); });
+    el.addEventListener('blur', () => setTimeout(() => { if (!typing()) $('#mbar').style.visibility = ''; }, 120));
     el.addEventListener('input', syncMini);
   });
-  miniToggle.addEventListener('pointerdown', (e) => e.preventDefault()); // keep the keyboard open
-  miniToggle.addEventListener('click', () => {
-    miniCollapsed = !miniCollapsed;
-    mini.classList.toggle('collapsed', miniCollapsed);
-    miniToggle.textContent = miniCollapsed ? 'Show preview' : 'Hide preview';
-    miniToggle.setAttribute('aria-expanded', String(!miniCollapsed));
-  });
+  // “Done” on the name field closes the keyboard instead of submitting the form.
+  from.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); from.blur(); } });
   if (window.visualViewport) { visualViewport.addEventListener('resize', placeMini); visualViewport.addEventListener('scroll', placeMini); }
+
+  // Bottom sheet: the dock opens the real studio viewer full-size; a spacer keeps the page from jumping.
+  const viewerEl = $('#viewer'), viewerSpacer = document.createElement('div');
+  let sheetScrollY = 0;
+  function openDockSheet() {
+    if (!compact.matches || document.body.classList.contains('dock-open')) return;
+    sheetScrollY = scrollY;
+    viewerSpacer.style.height = `${viewerEl.offsetHeight}px`;
+    viewerEl.after(viewerSpacer);
+    document.body.classList.add('dock-open');
+    viewerEl.setAttribute('role', 'dialog'); viewerEl.setAttribute('aria-modal', 'true'); viewerEl.setAttribute('aria-label', 'Your card');
+    const sc = $('#scrim'); sc.hidden = false; requestAnimationFrame(() => sc.classList.add('show'));
+    updateDock();
+    $('#sheetClose').focus({ preventScroll: true });
+  }
+  function closeDockSheet() {
+    if (!document.body.classList.contains('dock-open')) return;
+    document.body.classList.remove('dock-open');
+    ['role', 'aria-modal', 'aria-label'].forEach((a) => viewerEl.removeAttribute(a));
+    viewerSpacer.remove();
+    const sc = $('#scrim'); sc.classList.remove('show');
+    setTimeout(() => { if (!sc.classList.contains('show')) sc.hidden = true; }, 320);
+    window.scrollTo(0, sheetScrollY);
+    updateDock();
+    miniCard.focus({ preventScroll: true });
+  }
+  miniCard.addEventListener('click', openDockSheet);
+  $('#miniExpand').addEventListener('click', openDockSheet);
+  $('#miniFlip').addEventListener('click', () => { viewerCard.setOpen(!viewerCard.isOpen); syncMini(); flashMini(); });
+  $('#sheetClose').addEventListener('click', closeDockSheet);
+  viewerEl.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !document.body.classList.contains('dock-open')) return;
+    const f = [...viewerEl.querySelectorAll('button:not([disabled])')].filter((el) => el.offsetParent !== null);
+    if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  });
+  let sheetDragY = null;
+  viewerEl.addEventListener('pointerdown', (e) => { if (document.body.classList.contains('dock-open')) sheetDragY = e.clientY; });
+  viewerEl.addEventListener('pointerup', (e) => { if (sheetDragY !== null && e.clientY - sheetDragY > 80) closeDockSheet(); sheetDragY = null; });
+  viewerEl.addEventListener('pointercancel', () => { sheetDragY = null; });
   msg.addEventListener('focus', () => { if (!viewerCard.isOpen) viewerCard.setOpen(true); });
   from.addEventListener('input', () => onMessage(false));
   writeIt.addEventListener('change', () => onMessage(false));
@@ -1358,6 +1434,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     const next = Math.max(1, Math.min(99, n)), dir = Math.sign(next - state.qty);
     state.qty = next; const q = $('#qty'); q.textContent = String(next); renderOrderLine();
     if (dir && !reduce) q.animate([{ transform: `translateY(${dir * 60}%)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.16,1,.3,1)' });
+    syncMini(); if (dir) flashMini();
   };
   $('#qtyDown').addEventListener('click', () => setQty(state.qty - 1));
   $('#qtyUp').addEventListener('click', () => setQty(state.qty + 1));
@@ -1412,6 +1489,11 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     msg.value = sheetText.textContent;
     if (!viewerCard.isOpen) viewerCard.setOpen(true);
     onMessage(true);
+    flashMini();
+    // Mouse users keep typing where they were; on touch we don't pop the keyboard, just bring the
+    // message into view below the header and dock so the new line is visible.
+    if (finePointer) msg.focus({ preventScroll: true });
+    if (compact.matches) msg.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
     if (!reduce) sheet.animate([{ transform: 'none' }, { transform: 'translateY(-7px) rotate(-.8deg)', offset: .4 }, { transform: 'none' }], { duration: 900, easing: 'cubic-bezier(.16,1,.3,1)' });
   });
   // Drag to tear: the sheet pulls against the perforation, then rips free past a threshold.
@@ -1476,10 +1558,12 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     lastFocus = document.activeElement;
     scrim.hidden = false; requestAnimationFrame(() => scrim.classList.add('show'));
     drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
+    updateDock();
     $('#bagClose').focus();
   }
   function closeDrawer() {
     scrim.classList.remove('show'); drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
+    updateDock();
     setTimeout(() => { if (!drawer.classList.contains('open') && !modal.classList.contains('open')) scrim.hidden = true; }, 320);
     lastFocus && lastFocus.focus && lastFocus.focus();
   }
@@ -1563,7 +1647,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   }));
   $('#bagBtn').addEventListener('click', openDrawer);
   $('#bagClose').addEventListener('click', closeDrawer);
-  scrim.addEventListener('click', () => { if (modal.classList.contains('open')) closeModal(); else closeDrawer(); });
+  scrim.addEventListener('click', () => { if (document.body.classList.contains('dock-open')) closeDockSheet(); else if (modal.classList.contains('open')) closeModal(); else closeDrawer(); });
 
   function composeMessage(items) {
     return `Hi Frankies! New order 🛍️\nName: [your name]  Phone: [your number]\nItems:\n${items.map(orderLine).join('\n')}\nSubtotal: To be confirmed\nDelivery/Pickup: [chosen at checkout]`;
@@ -1572,10 +1656,10 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     lastFocus = document.activeElement;
     $('#waText').textContent = composeMessage(items);
     scrim.hidden = false; requestAnimationFrame(() => scrim.classList.add('show'));
-    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); $('#copyMsg').focus();
+    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); updateDock(); $('#copyMsg').focus();
   }
   function closeModal() {
-    modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true');
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); updateDock();
     if (!drawer.classList.contains('open')) { scrim.classList.remove('show'); setTimeout(() => { scrim.hidden = true; }, 320); }
     lastFocus && lastFocus.focus && lastFocus.focus();
   }
@@ -1589,7 +1673,8 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (modal.classList.contains('open')) closeModal(); else if (drawer.classList.contains('open')) closeDrawer();
+    if (document.body.classList.contains('dock-open')) closeDockSheet();
+    else if (modal.classList.contains('open')) closeModal(); else if (drawer.classList.contains('open')) closeDrawer();
   });
 
   /* ── Pockets ── */
@@ -1650,6 +1735,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   const menuBtn = $('#menuBtn'), mnav = $('#mnav');
   const setMenu = (on) => {
     mnav.hidden = !on; nav.classList.toggle('menu-open', on); menuBtn.setAttribute('aria-expanded', String(on));
+    updateDock();
     if (on && !reduce) [...mnav.children].forEach((a, i) => a.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: 60 + i * 60, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }));
   };
   menuBtn.addEventListener('click', () => setMenu(mnav.hidden));
