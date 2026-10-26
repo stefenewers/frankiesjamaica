@@ -337,7 +337,7 @@ textarea.msg:focus, input.txt:focus { outline: none; border-color: var(--espress
 .pockets-head p { max-width: 28em; margin: 0; opacity: .76; }
 .pocket-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
 .pocket { position: relative; border: 0; padding: 0; cursor: pointer; text-align: left; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: var(--p-bg); color: var(--p-fg); isolation: isolate; text-decoration: none; }
-.pocket:nth-child(even) { margin-top: 36px; }
+@media (min-width: 961px) { .pocket:nth-child(even) { margin-top: 36px; } }
 .pocket-card { position: absolute; left: 20%; right: 20%; top: 12%; aspect-ratio: 5/7; border-radius: 3px; overflow: hidden; box-shadow: 0 2px 3px rgba(0,0,0,.12), 0 18px 30px -10px rgba(0,0,0,.35); transform: translateY(0) rotate(var(--r, -3deg)); transition: transform 1.2s var(--ease-out); z-index: 1; }
 .pocket-card img { width: 100%; height: 100%; object-fit: cover; }
 .pocket-front { position: absolute; left: 0; right: 0; bottom: 0; height: 52%; background: color-mix(in srgb, var(--p-bg) 84%, #000); clip-path: polygon(0 0, 50% 26%, 100% 0, 100% 100%, 0 100%); z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
@@ -348,7 +348,7 @@ textarea.msg:focus, input.txt:focus { outline: none; border-color: var(--espress
 .pocket:focus-visible .pocket-card { transform: translateY(-17%) rotate(0deg) scale(1.03); }
 .pocket:focus-visible { outline: 3px solid var(--cream); outline-offset: 4px; }
 @media (max-width: 960px) { .pocket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 520px) { .pocket-grid { gap: 12px; } .pocket:nth-child(even) { margin-top: 24px; } .pocket-front { padding: 14px; } }
+@media (max-width: 520px) { .pocket-grid { gap: 12px; } .pocket-front { padding: 14px; } }
 
 /* ───────── Custom ───────── */
 .custom { background: #241913; color: #F3E9DC; padding-block: clamp(64px, 9vw, 120px); overflow: hidden; background-image: radial-gradient(70% 60% at 85% 40%, rgba(196,154,108,.16), transparent 70%); }
@@ -438,7 +438,7 @@ textarea.msg:focus, input.txt:focus { outline: none; border-color: var(--espress
 .story-frames figure { margin: 0; }
 .story-frames figure:nth-child(2) { margin-top: 40px; }
 .story-frames img { width: 100%; height: auto; aspect-ratio: 693 / 1080; object-fit: cover; border-radius: 14px; box-shadow: 0 2px 3px rgba(44,32,27,.1), 0 22px 36px -18px rgba(44,32,27,.45); }
-@media (max-width: 860px) { .story-grid { grid-template-columns: 1fr; } .story-frames { gap: 10px; } .story-frames figure:nth-child(2) { margin-top: 24px; } }
+@media (max-width: 860px) { .story-grid { grid-template-columns: 1fr; } }
 .foot-contact { font-style: normal; display: flex; flex-wrap: wrap; gap: 4px 24px; width: 100%; font-size: 15px; }
 .foot-contact a, .foot-contact span { display: inline-flex; align-items: center; min-height: 44px; color: inherit; }
 .foot-contact a { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(255,249,242,.4); }
@@ -526,6 +526,51 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   .mbar.show { transform: translateY(0); }
   .mbar .btn { flex: 1; height: 50px; }
   .mbar img { width: 34px; aspect-ratio: 5/7; object-fit: cover; border-radius: 2px; }
+}
+
+/* ───────── Mobile alignment ─────────
+   One rule set on phones: a single 16px gutter, copy left, art centred only inside its own frame,
+   paired buttons equal-width, no staggers. */
+.tabs-shell { scroll-snap-type: x proximity; }
+.tab { scroll-snap-align: start; }
+.tabs-shell.fade-r, .recip.fade-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
+.tabs-shell.fade-l, .recip.fade-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
+.tabs-shell.fade-l.fade-r, .recip.fade-l.fade-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
+@media (max-width: 960px) {
+  .designs-group.single-design { display: none; }
+  .recip button { min-width: 44px; }
+}
+@media (max-width: 860px) {
+  .story-frames { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding: 4px var(--gutter-r) 24px var(--gutter); scroll-padding-inline: var(--gutter); }
+  .story-frames::-webkit-scrollbar { display: none; }
+  .story-frames figure { flex: 0 0 78%; scroll-snap-align: start; }
+  .facts { margin-left: 6px; max-width: calc(100% - 12px); }
+}
+@media (max-width: 520px) {
+  .stage-ctas { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .stage-ctas .btn { width: 100%; min-height: 48px; }
+  .deck { min-height: 420px; }
+  .deck-caption { left: 0; right: 0; transform: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .deck-caption .pill { width: 100%; min-width: 0; justify-content: center; gap: 6px; padding: 0 10px; }
+  .recip { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding-inline: var(--gutter) var(--gutter-r); scroll-padding-inline: var(--gutter) var(--gutter-r); }
+  .recip::-webkit-scrollbar { display: none; }
+  .recip > * { flex: none; scroll-snap-align: start; }
+  .pad-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .pad-actions .btn { width: 100%; padding: 0 12px; }
+  .sheet { padding-left: 14px; padding-right: 14px; }
+  .k-info { padding-inline: 0; }
+  #startBrief { width: 100%; }
+}
+/* Short phones (iPhone SE class): smaller hero card so "Open card / Next design" stays above the fold */
+@media (max-width: 520px) and (max-height: 700px) {
+  .deck { min-height: 252px; padding-bottom: 54px; }
+  .deck .card { --w: min(36vw, 150px); }
+  .deck-back .card { --w: min(30vw, 124px); }
+  .deck-env { width: min(44vw, 180px); }
+}
+@media (max-width: 400px) {
+  .coll-row { flex-direction: column; align-items: stretch; }
+  select.coll-select { width: 100%; }
 }
 
 /* Granola cursor: desktop mice and trackpads only. Clickable things get a tilted, slightly larger cluster;
@@ -672,7 +717,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
             <select class="coll-select" id="collSelect"></select>
           </div>
 
-          <div class="field-group">
+          <div class="field-group designs-group">
             <div class="field-label" id="designLabel"><span><span class="step" aria-hidden="true">1</span>Choose a design</span> <small id="designName"></small></div>
             <div class="designs" role="radiogroup" aria-labelledby="designLabel" id="designs"></div>
           </div>
@@ -852,10 +897,10 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
         <p class="story-meta">Founded in Kingston, Jamaica in 2026 by Kendall Todd.</p>
         <p class="story-meta">Also available at My Maison and @everyfrillything (Every Frill Thing).</p>
       </div>
-      <div class="story-frames reveal">
-        <figure><img src="img/stories/cards_champagne-to-baby-showers.jpg" srcset="img/stories/cards_champagne-to-baby-showers-360.jpg 360w, img/stories/cards_champagne-to-baby-showers.jpg 693w" sizes="(max-width: 860px) 30vw, 200px" width="693" height="1080" alt="A hand picking from FRANKIES celebration cards, captioned “champagne towers to baby showers”" loading="lazy" decoding="async"></figure>
-        <figure><img src="img/stories/cards_friend-in-jesus.jpg" srcset="img/stories/cards_friend-in-jesus-360.jpg 360w, img/stories/cards_friend-in-jesus.jpg 693w" sizes="(max-width: 860px) 30vw, 200px" width="693" height="1080" alt="A FRANKIES faith card in blue lettering, “What a friend we have in Jesus”, marked now available" loading="lazy" decoding="async"></figure>
-        <figure><img src="img/stories/granola_gift-bags-thank-you.jpg" srcset="img/stories/granola_gift-bags-thank-you-360.jpg 360w, img/stories/granola_gift-bags-thank-you.jpg 693w" sizes="(max-width: 860px) 30vw, 200px" width="693" height="1080" alt="Kraft gift bags tied with brown ribbon and a “Thank you for a great year!” tag, captioned “It's all in the details”" loading="lazy" decoding="async"></figure>
+      <div class="story-frames reveal" tabindex="0" role="region" aria-label="FRANKIES stories">
+        <figure><img src="img/stories/cards_champagne-to-baby-showers.jpg" srcset="img/stories/cards_champagne-to-baby-showers-360.jpg 360w, img/stories/cards_champagne-to-baby-showers.jpg 693w" sizes="(max-width: 860px) 78vw, 200px" width="693" height="1080" alt="A hand picking from FRANKIES celebration cards, captioned “champagne towers to baby showers”" loading="lazy" decoding="async"></figure>
+        <figure><img src="img/stories/cards_friend-in-jesus.jpg" srcset="img/stories/cards_friend-in-jesus-360.jpg 360w, img/stories/cards_friend-in-jesus.jpg 693w" sizes="(max-width: 860px) 78vw, 200px" width="693" height="1080" alt="A FRANKIES faith card in blue lettering, “What a friend we have in Jesus”, marked now available" loading="lazy" decoding="async"></figure>
+        <figure><img src="img/stories/granola_gift-bags-thank-you.jpg" srcset="img/stories/granola_gift-bags-thank-you-360.jpg 360w, img/stories/granola_gift-bags-thank-you.jpg 693w" sizes="(max-width: 860px) 78vw, 200px" width="693" height="1080" alt="Kraft gift bags tied with brown ribbon and a “Thank you for a great year!” tag, captioned “It's all in the details”" loading="lazy" decoding="async"></figure>
       </div>
     </div>
   </section>
@@ -1220,9 +1265,12 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     const x = sel.offsetLeft, w = sel.offsetWidth;
     if (snap) { indX.snap(x); indW.snap(w); } else { indX.to(x); indW.to(w); }
     const sl = tabs.scrollLeft, vw = tabs.clientWidth;
-    if (x < sl || x + w > sl + vw) tabs.scrollTo({ left: x - 24, behavior: reduce ? 'auto' : 'smooth' });
+    if (matchMedia('(max-width: 960px)').matches) tabs.scrollTo({ left: x - (vw - w) / 2, behavior: reduce ? 'auto' : 'smooth' });
+    else if (x < sl || x + w > sl + vw) tabs.scrollTo({ left: x - 24, behavior: reduce ? 'auto' : 'smooth' });
   }
   const recip = $('.recip');
+  const scrollFade = (el) => { el.classList.toggle('fade-l', el.scrollLeft > 4); el.classList.toggle('fade-r', el.scrollLeft + el.clientWidth < el.scrollWidth - 4); };
+  [tabs, recip].forEach((el) => { el.addEventListener('scroll', () => scrollFade(el), { passive: true }); addEventListener('resize', () => scrollFade(el)); requestAnimationFrame(() => scrollFade(el)); });
   RECIPIENTS.forEach(([label, id]) => {
     const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
     b.addEventListener('click', () => selectMood(id, { origin: b }));
@@ -1284,6 +1332,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     $('#designName').textContent = DESIGNS[d];
     collSelect.value = m.id;
     const wrap = $('#designs'); wrap.innerHTML = '';
+    wrap.closest('.designs-group').classList.toggle('single-design', m.designs.length < 2);
     m.designs.forEach((id) => {
       const on = id === d;
       const b = document.createElement('button');
