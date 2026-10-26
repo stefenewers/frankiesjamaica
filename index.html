@@ -20,7 +20,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:wght@400..700&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap">
+<link rel="preload" as="image" href="img/envelope.webp" type="image/webp" fetchpriority="high">
+<!-- Same Google Fonts stylesheet, loaded without blocking the first paint -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:wght@400..700&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:wght@400..700&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap"></noscript>
 <style>
 /* Layout concept: a neutral FRANKIES "stage" that takes on each occasion's colour as you explore,
    where real cards behave like paper; then a studio that turns one card into an exact WhatsApp order.
@@ -136,6 +139,7 @@ a { color: inherit; }
 .intro { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; overflow: hidden;
   background: radial-gradient(110% 85% at 50% 42%, #4a3324 0%, #2C201B 52%, #1b130f 100%); color: #F3E6D6; }
 .intro-inner { display: grid; justify-items: center; gap: 22px; }
+@media (prefers-reduced-motion: reduce) { .intro { display: none; } }
 .env { --h: min(72svh, 620px); position: relative; height: var(--h); width: calc(var(--h) * .8); perspective: 2200px; }
 @media (max-width: 520px) { .env { --h: min(62svh, 116vw); } }
 .env-layer { position: absolute; inset: 0; }
@@ -528,10 +532,15 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   .mbar img { width: 34px; aspect-ratio: 5/7; object-fit: cover; border-radius: 2px; }
 }
 
+/* Envelope photo: lighter WebP where supported; img/envelope.jpg stays as the fallback. */
+.env-photo, .flap-front, .deck-env, .tuck-env, .tuck-flap { background-image: image-set(url(img/envelope.webp) type("image/webp"), url(img/envelope.jpg) type("image/jpeg")); }
+/* Brand marks: intrinsic size set in the markup, displayed size set by CSS width */
+.seal img, .deck-seal img, .stage-mark img, .custom-seal img, .foot-seal img, .face.back img { height: auto; }
+
 /* ───────── Mobile alignment ─────────
    One rule set on phones: a single 16px gutter, copy left, art centred only inside its own frame,
    paired buttons equal-width, no staggers. */
-.tabs-shell { scroll-snap-type: x proximity; }
+.tabs-shell { scroll-snap-type: x proximity; scroll-padding-inline: 6px; } /* = its inner padding, so loading never nudges it (a load-time snap scroll stops Chrome measuring LCP) */
 .tab { scroll-snap-align: start; }
 .tabs-shell.fade-r, .recip.fade-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
 .tabs-shell.fade-l, .recip.fade-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
@@ -594,13 +603,16 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   .reveal.pre { opacity: 1; transform: none; }
 }
 </style>
+<!-- The envelope intro paints straight from the HTML; without JavaScript it stays out of the way.
+     (Kept after the main <style> so the main stylesheet stays first.) -->
+<noscript><style>.intro { display: none !important; }</style></noscript>
 </head>
 <body>
 
 <a class="skip" href="#studio">Skip to the card studio</a>
 
 <!-- ───────── Intro: the real FRANKIES "Open This" envelope ───────── -->
-<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to FRANKIES" hidden>
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to FRANKIES">
   <div class="intro-inner">
     <div class="env" id="env">
       <div class="env-layer env-photo env-back"></div>
@@ -610,7 +622,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
         <div class="flap-face-wrap"><div class="flap-front"><div class="flap-shade" id="flapShadeFront"></div></div></div>
         <div class="flap-face-wrap flap-back-wrap"><div class="flap-back"><div class="flap-shade" id="flapShadeBack"></div></div></div>
       </div>
-      <button class="seal" id="seal" type="button" aria-label="Break the seal and open FRANKIES"><img src="img/wordmark-bone.png" alt=""></button>
+      <button class="seal" id="seal" type="button" aria-label="Break the seal and open FRANKIES"><img src="img/wordmark-bone.png" alt="" width="780" height="143"></button>
     </div>
     <p class="intro-hint" id="introHint">Tap the seal to open</p>
   </div>
@@ -649,7 +661,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 <main id="main">
   <!-- ───────── Stage ───────── -->
   <section class="stage neutral wrap" id="top" aria-labelledby="stageTitle">
-    <div class="stage-mark" id="stageMark" aria-hidden="true"><img src="img/wordmark-brown.png" alt=""></div>
+    <div class="stage-mark" id="stageMark" aria-hidden="true"><img src="img/wordmark-brown.png" alt="" width="780" height="143"></div>
     <div class="inner">
       <div class="stage-grid">
         <div class="stage-copy">
@@ -662,7 +674,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
           </div>
         </div>
         <div class="deck" id="deck">
-          <div class="deck-env" aria-hidden="true"><div class="deck-seal"><img src="img/wordmark-bone.png" alt=""></div></div>
+          <div class="deck-env" aria-hidden="true"><div class="deck-seal"><img src="img/wordmark-bone.png" alt="" width="780" height="143"></div></div>
           <div class="deck-back" id="deckBack" aria-hidden="true"></div>
           <div class="deck-front" id="deckFront"></div>
           <div class="deck-caption">
@@ -822,7 +834,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
       <div class="custom-visual on-dark">
         <div class="custom-photo"><img src="img/brand-gift-box.jpg" alt="FRANKIES cards beside a white gift box closed with the FRANKIES seal" loading="lazy"></div>
         <div id="customCard"></div>
-        <div class="custom-seal" aria-hidden="true"><img src="img/wordmark-bone.png" alt=""></div>
+        <div class="custom-seal" aria-hidden="true"><img src="img/wordmark-bone.png" alt="" width="780" height="143" loading="lazy" decoding="async"></div>
       </div>
     </div>
   </section>
@@ -831,7 +843,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   <section class="kitchen wrap" id="granola" aria-labelledby="kitchenTitle">
     <div class="inner kitchen-grid">
       <div class="bowl reveal">
-        <div class="bowl-img"><img src="img/granola-bowl-top.jpg" alt="FRANKIES granola in a coconut shell with strawberries, kiwi and blueberries, seen from above" loading="lazy"></div>
+        <div class="bowl-img"><picture><source srcset="img/granola-bowl-top.webp" type="image/webp"><img src="img/granola-bowl-top.jpg" alt="FRANKIES granola in a coconut shell with strawberries, kiwi and blueberries, seen from above" loading="lazy"></picture></div>
         <div class="jar-label" aria-hidden="true">From the<br>FRANKIES<br>kitchen</div>
       </div>
       <div class="reveal">
@@ -908,7 +920,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 
 <footer class="foot wrap">
   <div class="inner foot-grid">
-    <div class="foot-seal" aria-hidden="true"><img src="img/wordmark-bone.png" alt=""></div>
+    <div class="foot-seal" aria-hidden="true"><img src="img/wordmark-bone.png" alt="" width="780" height="143" loading="lazy" decoding="async"></div>
     <nav class="foot-links" aria-label="Footer">
       <a href="#studio">Card studio</a><a href="#occasions">Occasions</a><a href="#custom">Custom cards</a><a href="#granola">Granola</a>
       <a href="https://www.instagram.com/frankiesjamaica" target="_blank" rel="noopener">Instagram</a>
@@ -928,7 +940,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 
 <div class="mini-preview" id="miniPreview" hidden>
   <button type="button" class="mini-card" id="miniCard" aria-label="Show full card preview">
-    <span class="mini-thumb"><img id="miniFront" src="img/cards/thinking-of-you.jpg" alt="" width="40" height="56"><span class="mini-qty" id="miniQty"></span></span>
+    <span class="mini-thumb"><img id="miniFront" src="img/cards/thinking-of-you.jpg" alt="" width="40" height="56" loading="lazy" decoding="async"><span class="mini-qty" id="miniQty"></span></span>
     <span class="mini-inside"><span class="mini-note placeholder" id="miniNote">Your message appears here.</span></span>
   </button>
   <div class="mini-actions">
@@ -938,7 +950,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
 </div>
 
 <div class="mbar" id="mbar" aria-hidden="true">
-  <img id="mbarImg" src="img/cards/thinking-of-you.jpg" alt="">
+  <img id="mbarImg" src="img/cards/thinking-of-you.jpg" alt="" width="34" height="48" loading="lazy" decoding="async">
   <button class="btn btn-ink" type="button" id="mbarAdd" tabindex="-1">Add to bag</button>
 </div>
 
@@ -1055,7 +1067,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
           <div class="card-inside"><div class="inside-shade"></div><p class="note placeholder">Your message appears here.</p><p class="sig"></p><span class="writer" hidden>Written by FRANKIES</span></div>
           <div class="card-cover">
             <div class="face front"><img alt="" decoding="async"><div class="glare"></div><div class="face-shade"></div><div class="card-edge"></div></div>
-            <div class="face back"><img src="img/wordmark-brown.png" alt=""><div class="face-shade"></div></div>
+            <div class="face back"><img src="img/wordmark-brown.png" alt="" width="780" height="143" decoding="async"><div class="face-shade"></div></div>
           </div>
         </div>
         <div class="card-shadow"></div>
@@ -1191,7 +1203,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     nav.classList.toggle('on-dark-nav', !!m.dark);
     $('meta[name="theme-color"]')?.setAttribute('content', m.bg);
     const mark = $('#stageMark');
-    mark.innerHTML = m.neutral ? '<img src="img/wordmark-brown.png" alt="">' : esc(m.label);
+    mark.innerHTML = m.neutral ? '<img src="img/wordmark-brown.png" alt="" width="780" height="143">' : esc(m.label);
   }
   // Colour change as ink spreading through paper, from the control that was used.
   function moodWipe(m, origin) {
@@ -1205,7 +1217,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     stage.prepend(w);
     document.documentElement.style.setProperty('--mood-fg', m.fg);
     $('#stageMark').animate([{ opacity: 1 }, { opacity: 0 }, { opacity: 1 }], { duration: 1300, easing: 'ease-in-out' });
-    setTimeout(() => { if (state.moodId === (m.id === 'all' ? 'all' : m.id)) { const mk = $('#stageMark'); mk.innerHTML = m.neutral ? '<img src="img/wordmark-brown.png" alt="">' : esc(m.label); } }, 600);
+    setTimeout(() => { if (state.moodId === (m.id === 'all' ? 'all' : m.id)) { const mk = $('#stageMark'); mk.innerHTML = m.neutral ? '<img src="img/wordmark-brown.png" alt="" width="780" height="143">' : esc(m.label); } }, 600);
     w.animate([{ clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(${R}px at ${x}px ${y}px)` }], { duration: 1250, easing: 'cubic-bezier(.7,0,.2,1)' }).onfinish = () => { setMoodVars(m); w.remove(); };
   }
   function setTitle(text) {
@@ -1780,7 +1792,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
   const etsy = document.createElement('a');
   etsy.className = 'pocket reveal'; etsy.href = 'https://frankiesja.etsy.com'; etsy.target = '_blank'; etsy.rel = 'noopener';
   etsy.style.setProperty('--p-bg', '#C49A6C'); etsy.style.setProperty('--p-fg', '#241913'); etsy.style.transitionDelay = '180ms';
-  etsy.innerHTML = `<div class="pocket-card" style="--r:3deg; background:#FFFDF8 var(--paper-noise); display:grid; place-items:center"><img src="img/wordmark-brown.png" alt="" style="width:62%; height:auto"></div><div class="pocket-front"><strong>Also on Etsy</strong><span>Shop FRANKIES on Etsy ↗</span></div>`;
+  etsy.innerHTML = `<div class="pocket-card" style="--r:3deg; background:#FFFDF8 var(--paper-noise); display:grid; place-items:center"><img src="img/wordmark-brown.png" alt="" width="780" height="143" style="width:62%; height:auto"></div><div class="pocket-front"><strong>Also on Etsy</strong><span>Shop FRANKIES on Etsy ↗</span></div>`;
   pockets.appendChild(etsy);
 
   /* ── Custom section card (opens when scrolled into view) ── */
@@ -1838,7 +1850,7 @@ footer.foot { background: var(--espresso); color: rgba(255,249,242,.88); padding
     try { sessionStorage.setItem('frankies-intro', '1'); } catch {}
   }
   function showIntro() {
-    if (reduce) return;
+    if (reduce) { intro.hidden = true; return; }
     introEls.forEach((q) => $(q).getAnimations().forEach((a) => a.cancel()));
     document.querySelectorAll('.flyer').forEach((f) => f.remove());
     $('#envCardImg').src = img(state.designId);
